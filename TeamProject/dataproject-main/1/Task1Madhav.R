@@ -6,4 +6,4 @@ library(dplyr)
 behaviour1 <- behaviour
 row.names(behaviour1) <- paste(behaviour1$sample, behaviour1$treatment,
                                behaviour1$ï..exp_round, sep = "_")
-beh <- select(behaviour1, S:M)
+b1 <- select(behaviour1, S:M)
