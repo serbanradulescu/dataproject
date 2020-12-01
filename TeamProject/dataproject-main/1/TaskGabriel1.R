@@ -15,3 +15,19 @@ source("importdata.R")
 ### the weight does not follow a normal distribution.
 
 hist(weight$Weight..g.)
+
+summary(weight)
+str(weight)
+
+
+## The treatment, FIL and Time were integer, so i needed to convert them to a factor for easier manipulation.
+weight$Treatment <- as.factor(weight$Treatment)
+weight$FIL <- as.factor(weight$FIL)
+weight$Time <- as.factor(weight$Time)
+str(weight)
+
+#One-way ANOVA to determine the effect of thiamethoxam on pupal weight
+anoweight <- aov(Weight..g. ~ Treatment, data = weight)
+summary(anoweight)
+
+#Based on the ANOVA 
