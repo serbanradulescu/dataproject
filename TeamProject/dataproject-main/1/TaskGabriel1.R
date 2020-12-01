@@ -29,5 +29,28 @@ str(weight)
 #One-way ANOVA to determine the effect of thiamethoxam on pupal weight
 pupweight <- aov(Weight..g. ~ Treatment, data = weight)
 summary(pupweight)
+### the ANOVA is suggesting there is no significance between the treatment.
 
+##LeveneTest for equality of Variance
+#Hypothesis
+#H0: The variance for all groups are equal
+#H1: At least one variance is not equal
 
+library(car)
+leveneTest(Weight..g. ~ Treatment, data = weight)
+
+#Kruskal Wallis to to determine the effect of thiamethoxam on pupal weight
+library(agricolae)
+kruz <- kruskal(weight$Weight..g., trt = weight$Treatment)
+print(kruz)
+
+#Based on the Levenetest, the variance for all the groups are equal
+#Test for normality using the Shapiro–Wilk statistic
+shapiro.test(pupweight$residuals)
+
+#Fisher`s test between Treatment and FIL
+#First I create a new table
+
+Tfil <- table(weight$FIL, weight$Treatment)
+Tfil
+fisher.test(Tfil)
