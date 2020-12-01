@@ -30,4 +30,4 @@ str(weight)
 anoweight <- aov(Weight..g. ~ Treatment, data = weight)
 summary(anoweight)
 
-#Based on the ANOVA 
+#Based on the ANOVA
