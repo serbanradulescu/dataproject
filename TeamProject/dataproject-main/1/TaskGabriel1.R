@@ -27,6 +27,7 @@ weight$Time <- as.factor(weight$Time)
 str(weight)
 
 #One-way ANOVA to determine the effect of thiamethoxam on pupal weight
-anoweight <- aov(Weight..g. ~ Treatment, data = weight)
-summary(anoweight)
+pupweight <- aov(Weight..g. ~ Treatment, data = weight)
+summary(pupweight)
+
 
