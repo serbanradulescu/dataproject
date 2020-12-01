@@ -20,23 +20,24 @@ library(agricolae)
 library( RVAideMemoire)
 source("importdata.R")
 
-TA2 <- aggregate(survival$dead, by = list(survival$treatment),
-                 FUN = function(x) c(mean = mean(x))
-                 )
-TA2 <- as.data.frame(as.matrix(TA2))
-names(TA2) <- c("treatment", "survrate")
-TA2$treatment <- as.factor(TA2$treatment)
+#For the mortality rate (survival$dead)
+#Step 1: We plot it in order to see if:
+#-there are differences between the blocks
+#-there are differences between the treatments
 
-ggplot(TA2, aes(x=treatment, y=survrate)) + 
-  geom_bar(stat="identity")
 
 survival$treatment <- as.factor(survival$treatment)
 survival$exp_round <- as.factor(survival$exp_round)
 ggplot(survival, aes(x=treatment, y=dead, fill=exp_round)) + 
   geom_bar(stat="identity")
 
+#It is obvious that the treatment500 is different from the others.
+#It is hard to observe if there are differences between blocks, we procced to do a linear model with the blocks as median
+
 lm1 <- lm(dead ~ treatment + exp_round, data= survival)
 summary(lm1)
+
+
 
 lm1 <- lm(dead ~ treatment + exp_round +
             I(as.numeric(treatment) * as.numeric(exp_round)),
@@ -70,3 +71,4 @@ agri <- HSD.test(anv, 'survival$treatment', alpha = 0.05, group=TRUE, main = "HS
 plot(agri, main = "Observing statistical differences with agricola package", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
 
 
+#Conclusions:
