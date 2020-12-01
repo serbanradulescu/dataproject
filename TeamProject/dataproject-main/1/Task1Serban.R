@@ -15,5 +15,58 @@
 #5.time to pup - if it never reached adulthood, daysinxp are considered 0
 #6.dead - mortality (yes or no) 
 
-
+library(ggplot2)
+library(agricolae)
+library( RVAideMemoire)
 source("importdata.R")
+
+TA2 <- aggregate(survival$dead, by = list(survival$treatment),
+                 FUN = function(x) c(mean = mean(x))
+                 )
+TA2 <- as.data.frame(as.matrix(TA2))
+names(TA2) <- c("treatment", "survrate")
+TA2$treatment <- as.factor(TA2$treatment)
+
+ggplot(TA2, aes(x=treatment, y=survrate)) + 
+  geom_bar(stat="identity")
+
+survival$treatment <- as.factor(survival$treatment)
+survival$exp_round <- as.factor(survival$exp_round)
+ggplot(survival, aes(x=treatment, y=dead, fill=exp_round)) + 
+  geom_bar(stat="identity")
+
+lm1 <- lm(dead ~ treatment + exp_round, data= survival)
+summary(lm1)
+
+lm1 <- lm(dead ~ treatment + exp_round +
+            I(as.numeric(treatment) * as.numeric(exp_round)),
+          data= survival)
+summary(lm1)
+
+t1 <- table(survival$treatment, survival$dead)
+fisher.test(t1, simulate.p.value=TRUE)
+
+fisher.multcomp(t1)
+#500 has significant differences with all of them, between them there is no significant difference
+
+#ANOVA
+
+lm1 <- lm(timetopup ~ treatment + exp_round, data= survival)
+summary(lm1)
+
+lm1 <- lm(timetopup ~ treatment + exp_round +
+            I(as.numeric(treatment) * as.numeric(exp_round)),
+          data= survival)
+summary(lm1)
+
+#No interaction, p = 0.27, do the anova
+
+anv <- aov( lm(survival$timetopup ~ survival$treatment) )
+summary(anv)
+
+plot(y=survival$timetopup, x= survival$treatment)
+
+agri <- HSD.test(anv, 'survival$treatment', alpha = 0.05, group=TRUE, main = "HSD Test")
+plot(agri, main = "Observing statistical differences with agricola package", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
+
+
