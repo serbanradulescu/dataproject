@@ -5,9 +5,14 @@ library(ggplot2)
 library(factoextra)
 ### Principal component analysis for the behaviour data
 ##First step: Converting the dataframe to numeric
-behaviour1 <- behaviour
+behaviour1 <- behaviour  ## making a copy of the originaml dataframe
+##Renaming columns
+colnames(behaviour1)
+names(behaviour1)[names(behaviour1) == "ï..exp_round"] <- "er"
+##making a numeric dataframe
+behaviour1
 row.names(behaviour1) <- paste(behaviour1$sample, behaviour1$treatment,
-                               behaviour1$Ã¯..exp_round, sep = "_")
+                               behaviour1$er, sep = "_")
 b1 <- select(behaviour1, S:M)
 
 ##Prcomping for Principal component analysis
@@ -20,15 +25,23 @@ summary(pca1)
 ##Scree plot
 fviz_eig(pca1, addlabels = TRUE)
 ##Individuals PCA
+##Plot A
 fviz_pca_ind(pca1, col.ind = "cos2", 
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
              repel = TRUE)
 fviz_pca_ind(pca1)
 
+##PlotB
+fviz_pca_ind(pca1, col.ind = "cos2",
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
+             label = "none",
+             repel = TRUE
+)
+fviz_pca_ind(pca1)
 ##Plotting ellipses for each treatment
 ##Making a new dataframe 
 row.names(behaviour1) <- paste(behaviour1$sample,
-                               behaviour1$?..exp_round, sep = "_")
+                               behaviour1$er, sep = "_")
 b2 <- select(behaviour1, treatment, S:M)
 ## second PCA
 pca2 <- prcomp(b2, scale = TRUE)
