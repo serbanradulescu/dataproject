@@ -18,6 +18,7 @@
 library(ggplot2)
 library(agricolae)
 library( RVAideMemoire)
+library(stringr)
 source("importdata.R")
 
 #For the mortality rate (survival$dead)
@@ -88,3 +89,42 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 
 
 #Conclusions:
+
+
+#Hypothesis 6
+#Redefine survival and redo the analyses
+
+library(stringr)
+numextract <- function(string){ 
+  str_extract(string, "\\-*\\d+\\.*\\d*")
+} 
+
+ï..RepID <- numextract(behaviour$sample)
+survival2 <- data.frame(ï..RepID, behaviour$ï..exp_round, behaviour$treatment)
+
+
+for(i in 1:nrow(survival2)) { 
+  if(survival2$behaviour.treatment[i] == 5) {
+    survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 36}
+  if(survival2$behaviour.treatment[i] == 15) {
+    survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 72}
+  if(survival2$behaviour.treatment[i] == 50) {
+    survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 105}
+  if(survival2$behaviour.treatment[i] == 100) {
+    survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 140}
+  if(survival2$behaviour.treatment[i] == 500) {
+    survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 175}
+  
+  }
+survival2 <- survival2[order(as.numeric(ï..RepID), behaviour$treatment),]
+
+redefdead <- as.vector(matrix(0,nrow=213))
+survival <- data.frame(survival, redefdead)
+
+
+for(i in nrow(survival2)){
+  for(j in nrow(survival))
+  if (survival2$ï..RepID[i] == survival$ï..RepID[j])
+    {survival$redefdead[j] <- 1}
+  
+}
