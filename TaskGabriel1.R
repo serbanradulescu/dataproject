@@ -25,6 +25,26 @@ Finalwgt <- filter(lavalweight, Time == 4)
 data.frame(Initialwgt)
 data.frame(Finalwgt)
 
+###Find the difference between the final and initial weight. There is a difference
+## in the number of row between the newly created data.frames, because some lavae
+#escaped before the final weight and some immediately after the fisrt weight, so 
+#there is a need to get those reps that have both the final and the initial weight 
+#to get the difference in weight.
+
+
+Initialweight <- replicate(153, 0)
+Finalwgt <- data.frame(Finalwgt, Initialweight)
+
+for(i in 1:nrow(Finalwgt)){
+  for(j in 1:nrow(Initialwgt)){
+  if(Finalwgt$Rep[i] == Initialwgt$Rep[j]){
+    Finalwgt$Initialweight[i] <- Initialwgt$weight[j]
+  }}}
+
+colnames(Finalwgt)[colnames(Finalwgt) == "weight"] <- "Finalweight"
+Finalwgt$Difference <- (Finalwgt$Finalweight - Finalwgt$Initialweight)
+Finalwgt <-  select(Finalwgt, -Time)
+
 ###Changing names of columns to differentiate initial and final time and weights
 colnames(Initialwgt)[colnames(Initialwgt) %in% c("Time", "weight")] <- 
   c("InitialTime", "Initialweight")
@@ -100,9 +120,11 @@ qqline(FW$residuals)
 #H0: The variance for all groups are equal
 #H1: At least one variance is not equal
 
-#Based on the LeveneTest, the variance for all the groups are equal
+
 leveneTest(Initialweight ~ Treatment, data = Initialwgt)
 leveneTest(Finalweight ~ Treatment, data = Finalwgt)
+#Based on the LeveneTest, the variance for all the groups are equal
+
 
 #Kruskal Wallis to to determine the effect of thiamethoxam on pupal weight
 
