@@ -24,34 +24,17 @@ summary(pca1)
 ##Plotting
 ##Scree plot
 fviz_eig(pca1, addlabels = TRUE)
+
+
 ##Individuals PCA
 ##Plot A
 fviz_pca_ind(pca1, col.ind = "cos2", 
              gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
              repel = TRUE)
-fviz_pca_ind(pca1)
 
 ##PlotB
 fviz_pca_ind(pca1, col.ind = "cos2",
-             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), 
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
              label = "none",
              repel = TRUE
 )
-fviz_pca_ind(pca1)
-##Plotting ellipses for each treatment
-##Making a new dataframe 
-row.names(behaviour1) <- paste(behaviour1$sample,
-                               behaviour1$er, sep = "_")
-b2 <- select(behaviour1, treatment, S:M)
-## second PCA
-pca2 <- prcomp(b2, scale = TRUE)
-##Elliptical plots
-fviz_pca_ind(pca2,
-             geom.ind = "point", # show points only (nbut not "text")
-             col.ind = b2$treatment, # color by groups
-             palette = c("#00AFBB", "#E7B800", "#FC4E07"),
-             addEllipses = TRUE, # Concentration ellipses
-             legend.title = "Groups"
-)
-
-
