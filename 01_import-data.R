@@ -28,3 +28,4 @@ names(weig)[which(names(weig) == "Weight (g)")] <- "weight"
 
 rm(file1, file2, file3)
 
+beha[is.na(beha)]=0
