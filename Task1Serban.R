@@ -19,6 +19,8 @@ library(ggplot2)
 library(agricolae)
 library( RVAideMemoire)
 library(stringr)
+library(tidyverse)
+library(stringr)
 source("01_import-data.R")
 
 #For the mortality rate (survival$dead)
@@ -88,14 +90,37 @@ summary(anv)
 agri <- HSD.test(anv, 'survival$treatment', alpha = 0.05, group=TRUE, main = "HSD Test")
 plot(agri, main = "Observing statistical differences with agricola package", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
 
-
 #Conclusions:
 #Treatment 500 is the only one that shows significant differences in comparison with the control.
+ovarian <- data.frame(ovarian)
+
+library(survival)
+library(survminer)
+library(dplyr)
+
+#we create the surv_object, which is a compiled version of the daysinexp and dead columns that can be interpreted using the survfit function
+surv_object <- Surv(time = survival$daysinexp, event = survival$dead)
+#Now we do the Kaplan-Meier curves
+fit1 <- survfit(surv_object ~ treatment, data = survival)
+summary(fit1)
+#We plot the Kaplan-Meier curves so we can see better
+ggsurvplot(fit1, data = survival, pval = TRUE)
+
+
+#Now we do the same with time to pupate. We found it already hard to read, because of the numerous treatments so we decided to include the time to pupate in another ggplot.
+surv_object <- Surv(time = survival$timetopup, event = survival$dead)
+fit2 <- survfit(surv_object ~ treatment, data = survival)
+summary(fit2)
+ggsurvplot(fit2, data = survival, pval = TRUE)
+
+#As many insects die while on treatment 500, the plot for time to pupate isn't very conclusive.
 
 #Hypothesis 6
 #Redefine survival and redo the analyses
-library(tidyverse)
- library(stringr)
+
+#Step 1: We get the data from behaviour in order to redefine survival. In order to do this, we create survival2, a data frame with the insects that survived.
+
+
 numextract <- function(string){
   str_extract(string, "\\-*\\d+\\.*\\d*")
 }
@@ -107,7 +132,12 @@ names(survival2)[names(survival2) == "ID"] <- "RepID"
 names(survival2)[names(survival2) == "behaviour.exp_round"] <- "exp_round"
 names(survival2)[names(survival2) == "behaviour.treatment"] <- "treatment"
 
+#Step 2: We observed that we can not corelate the data from behaviour with the one from survival, as the notations changed (we have sample 29 for exp_round 1)
+#We find a work around: merge the data with the survival one, but deleting the days in exp and time to pupate, as those can not be corelated. We just keep the number of individuals that survived and the number of individual that were initially in the experience.
+
 survival <- surv
+survival[4:5] <- list(NULL)
+
 redefdead <- replicate(213, 1)
 survival <- data.frame(survival, redefdead)
 
@@ -146,7 +176,7 @@ lm1 <- lm(redefdead ~ treatment + exp_round +
           data= survival)
 summary(lm1)
 
-#No interaction between treatments and blocks. (p_value = 0.5884)
+#No interaction between treatments and blocks. (p_value = 0.1551)
 #We proceed with the fisher test, as the data is categorical.
 
 t1 <- table(survival$treatment, survival$redefdead)
@@ -163,40 +193,3 @@ fisher.multcomp(t1)
 #Conclusions:
 #We couldn't do the time to pupate analysis of the redefined survival, as the values from behaviour table couldn't be correlated with the survival.
 #Even with the redefined survival, the only treatment that had a significant effect was the treatment500.
-
-
-
-# for(i in 1:nrow(survival)) {
-#   for(j in 1:nrow(survival2)) {
-#     if(survival$treatment[i] == survival2$treatment[j] && 
-#        survival$exp_round[i] == survival2$exp_round[j]) {
-#         survival$redefdead[i] <- 1
-#         i <- i+1
-#     }}}
-
-# 
-# for(i in 1:nrow(survival2)) { 
-#   if(survival2$behaviour.treatment[i] == 5) {
-#     survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 36}
-#   if(survival2$behaviour.treatment[i] == 15) {
-#     survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 72}
-#   if(survival2$behaviour.treatment[i] == 50) {
-#     survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 105}
-#   if(survival2$behaviour.treatment[i] == 100) {
-#     survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 140}
-#   if(survival2$behaviour.treatment[i] == 500) {
-#     survival2$ï..RepID[i] <- as.numeric(survival2$ï..RepID[i]) + 175}
-#   
-#   }
-# survival2 <- survival2[order(as.numeric(ï..RepID), behaviour$treatment),]
-# 
-# redefdead <- as.vector(matrix(0,nrow=213))
-# survival <- data.frame(survival, redefdead)
-# 
-# 
-# for(i in nrow(survival2)){
-#   for(j in nrow(survival))
-#   if (survival2$ï..RepID[i] == survival$ï..RepID[j])
-#     {survival$redefdead[j] <- 1}
-#   
-# }
