@@ -1,11 +1,11 @@
-source("importdata.R")
+source("01_import-data.R")
 library(tidyr)
 library(dplyr)
 library(ggplot2)
 library(factoextra)
 ### Principal component analysis for the behaviour data
 ##First step: Converting the dataframe to numeric
-behaviour1 <- behaviour  ## making a copy of the originaml dataframe
+behaviour1 <- beha  ## making a copy of the originaml dataframe
 ##Renaming columns
 colnames(behaviour1)
 names(behaviour1)[names(behaviour1) == "ï..exp_round"] <- "er"
