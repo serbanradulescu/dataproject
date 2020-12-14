@@ -10,7 +10,6 @@ library(ggplot2)
 ## Analyze the effect of treatments on larvae weight(working with the dataframe weight)
 
 ### Hypothesis:
-
 #H0: Larval weight does not depend upon the concentration of insecticide it is exposed to. 
 
 #H1: Larval weight depends upon the concentration of insecticide it is exposed to. 
