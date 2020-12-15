@@ -57,12 +57,13 @@ head(var$coord)
 head(var$cos2)
 head(var$contrib)
 
+
+##Heat map
+autoplot(var$cor)
 ##Plotting the correlation circle
 fviz_pca_var(pca1, col.var = "black")
-autoplot(var$cor)
+
 
 ##Individuals PCA
-autoplot(pca1, data = b2, colour = 'treatment')
-autoplot(pam(b2, 7),frame = TRUE, frame.type = 'norm')
-autoplot(pam(b2, 7),colour = "treatment", frame = TRUE, frame.type = 'norm')
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
+
