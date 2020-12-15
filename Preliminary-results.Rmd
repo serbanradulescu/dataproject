@@ -32,6 +32,7 @@ survived (5 days to time it forms a pupae)
 <br/> 6.dead - mortality (yes or no) 
 
 ###   2.behaviour
+INTRODUCTION
 The behaviour data records the time spent by 7 day old adult hoverflies.
 Seven adult behaviours were studied for 10 minutes (600 seconds) and
 the time spent on each behaviour was recorded in seconds. 
@@ -50,6 +51,32 @@ M- moving, which includes making small jerking motion while being stationary
 <br/> 4.Sex of the insect
 <br/> 5.6.7.8.9.10.11. the studied behaviours
 <br/> 12.The time of study is identical for all insects: 10 minutes (600 seconds)
+
+OBJECTIVE
+To study if the exposure to different concentrations of thiamethoxam during the larval stage affects the behaviour of hoverflies as adults.
+
+Hypothesis 0: The amount of thiamethoxam hoverfly larvae are exposed to affects their behaviour as adults.
+Hypothesis 1: The amount of thiamethoxam hoverfly larvae are exposed to does not affect their behaviour as adults.
+
+METHODS
+we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.
+
+Step 1. Organizing the data. 
+We had to convert our data from the tibble format to a numeric dataframe. 
+```{r}
+row.names(behaviour1) <- paste(behaviour1$sample,
+                               behaviour1$exp_round, sep = "_")
+b1 <-select(behaviour1, S:M)
+b2 <- data.frame(as.factor(beha$treatment), b1)
+colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
+
+```
+
+Step 2.Analysis
+
+We ran the prcomp command to run a PCA on our dataframe. From the Eigen values aand the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.
+
+
 
 ###  3.weight
 
