@@ -20,7 +20,6 @@ library(agricolae)
 library( RVAideMemoire)
 library(stringr)
 library(tidyverse)
-library(stringr)
 source("01_import-data.R")
 
 #For the mortality rate (survival$dead)
@@ -187,7 +186,7 @@ fisher.test(t1, simulate.p.value=TRUE)
 
 fisher.multcomp(t1)
 
-#500 has significant differences with all of them, between them there is no significant difference
+#Treatment500 has significant differences with all of them, between them there is no significant difference
 
 
 #Conclusions:
