@@ -59,39 +59,10 @@ fisher.test(t1, simulate.p.value=TRUE)
 
 fisher.multcomp(t1)
 
-#500 has significant differences with all of them, between them there is no significant difference
+#Treatment 500 has significant differences with all of them, between the others there is no significant difference
 
-#Part 2 - Analysis on time to pupate
-#ANOVA
 
-plot(y=survival$timetopup, x= survival$treatment, xlab="Time to pupate" , ylab="Treatment")
-
-#We know from previous analysis that treatment 500 is different. We proceed to study the differences between blocks and treatments for the time to pupate
-
-lm1 <- lm(timetopup ~ treatment + exp_round, data= survival)
-summary(lm1)
-
-#P value is bigger than 0.05 for: treatment500. The other treatments and the blocks show a p_value smaller than 0.5 so no significant effect.
-#We proceed to study the interaction betwenn treatments and blocks.
-
-lm1 <- lm(timetopup ~ treatment + exp_round +
-            I(as.numeric(treatment) * as.numeric(exp_round)),
-          data= survival)
-summary(lm1)
-
-#No interaction, p = 0.27, do the anova
-
-anv <- aov( lm(survival$timetopup ~ survival$treatment) )
-summary(anv)
-
-#Anova shows significant differences between treatments. We proceed with a HSD test.
-
-agri <- HSD.test(anv, 'survival$treatment', alpha = 0.05, group=TRUE, main = "HSD Test")
-plot(agri, main = "Observing statistical differences with agricola package", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
-
-#Conclusions:
-#Treatment 500 is the only one that shows significant differences in comparison with the control.
-ovarian <- data.frame(ovarian)
+#Study of survival
 
 library(survival)
 library(survminer)
@@ -114,11 +85,11 @@ ggsurvplot(fit2, data = survival, pval = TRUE)
 
 #As many insects die while on treatment 500, the plot for time to pupate isn't very conclusive.
 
+
 #Hypothesis 6
 #Redefine survival and redo the analyses
 
 #Step 1: We get the data from behaviour in order to redefine survival. In order to do this, we create survival2, a data frame with the insects that survived.
-
 
 numextract <- function(string){
   str_extract(string, "\\-*\\d+\\.*\\d*")
@@ -187,6 +158,38 @@ fisher.test(t1, simulate.p.value=TRUE)
 fisher.multcomp(t1)
 
 #Treatment500 has significant differences with all of them, between them there is no significant difference
+
+
+#Part 2 - Analysis on time to pupate on the original defined survival, as for the redefined we weren't able to identify the individuals
+#ANOVA
+
+plot(y=survival$timetopup, x= survival$treatment, xlab="Time to pupate" , ylab="Treatment")
+
+#We know from previous analysis that treatment 500 is different. We proceed to study the differences between blocks and treatments for the time to pupate
+
+lm1 <- lm(timetopup ~ treatment + exp_round, data= survival)
+summary(lm1)
+
+#P value is bigger than 0.05 for: treatment500. The other treatments and the blocks show a p_value smaller than 0.5 so no significant effect.
+#We proceed to study the interaction betwenn treatments and blocks.
+
+lm1 <- lm(timetopup ~ treatment + exp_round +
+            I(as.numeric(treatment) * as.numeric(exp_round)),
+          data= survival)
+summary(lm1)
+
+#No interaction, p = 0.27, do the anova
+
+anv <- aov( lm(survival$timetopup ~ survival$treatment) )
+summary(anv)
+
+#Anova shows significant differences between treatments. We proceed with a HSD test.
+
+agri <- HSD.test(anv, 'survival$treatment', alpha = 0.05, group=TRUE, main = "HSD Test")
+plot(agri, main = "Observing statistical differences with agricola package", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
+
+#Conclusions:
+#Treatment 500 is the only one that shows significant differences in comparison with the control.
 
 
 #Conclusions:
