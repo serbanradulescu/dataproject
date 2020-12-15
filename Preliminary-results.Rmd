@@ -96,7 +96,7 @@ We also did an anova for the effect of treatment on the time to pupate. The effe
 
 ## 6. Results. Figures and tables with captions and description of what do they mean.
 
-Effect of treatments on survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
+### Effect of treatments on survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
 
 ```{r effect of treatments on survival, echo=TRUE}
 #Step 1: We plot it in order to see if:
@@ -141,7 +141,7 @@ fisher.multcomp(t1)
 
 
 ```
-Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
+### Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
 
 ```{r effect of treatments on REDEFINED survival, error=FALSE, echo=TRUE}
 #Redefine survival and redo the analyses
@@ -219,7 +219,44 @@ fisher.multcomp(t1)
 ```
 
 
-Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
+### Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
+
+```{r Effect of treatments on time to pupate (ANOVA), error=FALSE, echo=TRUE}
+
+#Part 2 - Analysis on time to pupate on the original defined survival, as for the redefined we weren't able to identify the individuals
+#ANOVA
+
+survival <- surv
+#plot(y=survival$timetopup, x= survival$treatment, xlab="Time to pupate" , ylab="Treatment")
+
+#We know from previous analysis that treatment 500 is different. We proceed to study the differences between blocks and treatments for the time to pupate
+
+lm1 <- lm(timetopup ~ treatment + exp_round, data= survival)
+#summary(lm1)
+
+#P value is bigger than 0.05 for: treatment500. The other treatments and the blocks show a p_value smaller than 0.5 so no significant effect.
+#We proceed to study the interaction betwenn treatments and blocks.
+
+lm1 <- lm(timetopup ~ treatment + exp_round +
+            I(as.numeric(treatment) * as.numeric(exp_round)),
+          data= survival)
+#summary(lm1)
+
+#No interaction, p = 0.27, do the anova
+
+anv <- aov( lm(survival$timetopup ~ survival$treatment) )
+#summary(anv)
+
+#Anova shows significant differences between treatments. We proceed with a HSD test.
+
+agri <- HSD.test(anv, 'survival$treatment', alpha = 0.05, group=TRUE, main = "HSD Test")
+plot(agri, main = "Observing statistical differences with agricola package", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
+
+#Conclusions:
+#Treatment 500 is the only one that shows significant differences in comparison with the control.
+
+
+```
 
 ## 7. Discussion. From your objectives.
 
