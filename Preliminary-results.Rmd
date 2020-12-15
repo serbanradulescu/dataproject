@@ -7,7 +7,20 @@ output:
     code_folding: hide
 ---
 
+```{r libraries and importat of data, include = FALSE, echo=TRUE}
 
+library(ggplot2)
+library(agricolae)
+library( RVAideMemoire)
+library(stringr)
+library(tidyverse)
+library(survival)
+library(survminer)
+library(dplyr)
+
+source("01_import-data.R")
+
+```
 
 ## 3. Introduction. Explain the origin and structure of your data.
 Data comes from: https://peerj.com/articles/4258/, which is Effects of chronic exposure to thiamethoxam on larvae of the hoverfly Eristalis tenax (Diptera, Syrphidae).
@@ -138,20 +151,7 @@ H1:
 Hypothesis 1': Redefine survival  and redo the analyses
 
 
-```{r libraries and importat of data, include = FALSE, echo=TRUE}
 
-library(ggplot2)
-library(agricolae)
-library( RVAideMemoire)
-library(stringr)
-library(tidyverse)
-library(survival)
-library(survminer)
-library(dplyr)
-
-source("01_import-data.R")
-
-```
 
 
 ## 5. Methods. What have you done? And what did you use to do it? Step by step, so anyone could do it again by reading this part.
