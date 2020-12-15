@@ -1,0 +1,41 @@
+---
+title: "1. Title:Preliminary-results"
+author: "2. Team members names: Maya Hachicha, Gabriel Omobamidele, Madhav Chandarana, Radulescu Serban"
+date: "15/12/2020"
+output: html_document
+---
+
+## 3. Introduction. Explain the origin and structure of your data.
+###   1.survival
+
+ survival is a dataset with 6 column:
+1.the ID of repetition
+2.exp_round - different blocks, with 8 repetitions
+3.treatment - Control (0),T1= 15, T2= 50, T3= 100, T4= 500
+4.daysinxp  - the amount of days it needs to reach pupae and so to be considered
+survived (5 days to time it forms a pupae)
+5.time to pup - if it never reached adulthood, daysinxp are considered 0
+6.dead - mortality (yes or no) 
+
+###   2.behaviour
+
+###  3.weight
+
+## 4. Objectives and hypotheses.
+
+In this project, the objectives will be to reproduce the analysis done by the team that conducted the study. Further analysis can be conducted, at the recommendation of the coordinating professor.
+
+## 5. Methods. What have you done? And what did you use to do it? Step by step, so anyone could do it again by reading this part.
+
+## 6. Results. Figures and tables with captions and description of what do they mean.
+
+## 7. Discussion. From your objectives.
+
+## 8. Conclusions.
+
+
+## Analysis on survival
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
