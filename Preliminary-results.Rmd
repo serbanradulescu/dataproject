@@ -17,6 +17,11 @@ library(tidyverse)
 library(survival)
 library(survminer)
 library(dplyr)
+library(tidyr)
+library(ggfortify)
+library(factoextra)
+library(cluster)
+library(corrplot)
 
 source("01_import-data.R")
 
