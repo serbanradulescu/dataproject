@@ -106,7 +106,6 @@ Fordifference %>%
   theme_gray() +
   xlab("Treatment") + 
   ylab("Weight")
-  
 
  ###Fisher's test
 fil <- table(Fordifference$FIL, Fordifference$Treatment)
