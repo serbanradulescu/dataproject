@@ -77,6 +77,9 @@ library(agricolae)
 library( RVAideMemoire)
 library(stringr)
 library(tidyverse)
+library(survival)
+library(survminer)
+library(dplyr)
 
 source("01_import-data.R")
 
@@ -91,7 +94,9 @@ We plot the survival to study the effects of blocks and treatments. As we observ
 Because the data is categorical, we use a fisher test. After a simple fisher test shows significant differences between treatments, we proceed with a multicomparison fisher test. It showed that treatment500 has significant differences with all of them, between the others there is no significant difference. 
 
 Same results are obtained with the redefined survival. We redefine survival as the larvae that survived pupation and their behaviour could be studied as adults. Unfrtunately, we couldn't correlate each individual from surival with the ones form behaviour.
+
 ---
+
 We also did an anova for the effect of treatment on the time to pupate. The effects of the blocks and the interaction between blocks and treatment was studied. No interaction (p = 0.27), we proceed with the anova. The anova has shown significantly different effects. Furthermore, a HSD test showed two tipes
 
 ## 6. Results. Figures and tables with captions and description of what do they mean.
@@ -217,6 +222,36 @@ fisher.multcomp(t1)
 
 #Treatment500 has significant differences with all of them, between them there is no significant difference
 ```
+
+### A plot that puts survival in perspective
+
+```{r Kaplan-Meier curves, error=FALSE, echo=TRUE}
+
+
+
+survival <- surv
+
+#we create the surv_object, which is a compiled version of the daysinexp and dead columns that can be interpreted using the survfit function
+ 
+surv_object <- Surv(time = survival$daysinexp, event = survival$dead)
+
+#Now we do the Kaplan-Meier curves
+ 
+fit1 <- survfit(surv_object ~ treatment, data = survival)
+#summary(fit1)
+#We plot the Kaplan-Meier curves so we can see better
+ggsurvplot(fit1, data = survival, pval = TRUE)
+
+
+#Now we do the same with time to pupate. We found it already hard to read, because of the numerous treatments so we decided to include the time to pupate in another ggplot.
+surv_object <- Surv(time = survival$timetopup, event = survival$dead)
+fit2 <- survfit(surv_object ~ treatment, data = survival)
+#summary(fit2)
+ggsurvplot(fit2, data = survival, pval = TRUE)
+
+#As many insects die while on treatment 500, the plot for time to pupate isn't very conclusive.
+```
+
 
 
 ### Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
