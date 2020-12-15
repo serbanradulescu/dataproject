@@ -9,6 +9,7 @@ output:
 
 ```{r libraries and importat of data, include = FALSE, echo=TRUE}
 
+source("01_import-data.R")
 library(ggplot2)
 library(agricolae)
 library(stringr)
@@ -22,8 +23,9 @@ library(factoextra)
 library(cluster)
 library(corrplot)
 library(RVAideMemoire)
+library(car)
 
-source("01_import-data.R")
+
 
 ```
 
@@ -50,10 +52,15 @@ survived (5 days to time it forms a pupae)
 <br/> 6.dead - mortality (yes or no) 
 
 <<<<<<< HEAD
+
 ###   2.behaviour
+
 INTRODUCTION
+
 =======
+
 ###   b.behaviour
+
 >>>>>>> 57b8581b12941159b67d317f8263b7bea6319395
 The behaviour data records the time spent by 7 day old adult hoverflies.
 Seven adult behaviours were studied for 10 minutes (600 seconds) and
@@ -75,72 +82,7 @@ M- moving, which includes making small jerking motion while being stationary
 <br/> 12.The time of study is identical for all insects: 10 minutes (600 seconds)
 
 <<<<<<< HEAD
-OBJECTIVE
-To study if the exposure to different concentrations of thiamethoxam during the larval stage affects the behaviour of hoverflies as adults.
 
-Hypothesis 0: The amount of thiamethoxam hoverfly larvae are exposed to affects their behaviour as adults.
-Hypothesis 1: The amount of thiamethoxam hoverfly larvae are exposed to does not affect their behaviour as adults.
-
-METHODS AND RESULTS
-we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.
-
-Step 1. Organizing the data. 
-We had to convert our data from the tibble format to a numeric dataframe. 
-```{r}
-behaviour1 <- beha  ## making a copy of the originaml dataframe
-behaviour1 <- as.data.frame(behaviour1)
-row.names(behaviour1) <- paste(behaviour1$sample,
-                               behaviour1$exp_round, sep = "_")
-b1 <-select(behaviour1, S:M)
-b2 <- data.frame(as.factor(beha$treatment), b1)
-colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
-
-```
-
-Step 2.Analysis
-
-We ran the prcomp command to run a PCA on our dataframe. 
-```{r}
-pca1 <- prcomp(b1, scale = TRUE)
-
-##Eigen values
-eig.val <- get_eigenvalue(pca1)
-
-##Scree plot
-fviz_eig(pca1, addlabels = TRUE)
-```
-From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.
-
-Heat mapping:
-The heat map explains shows which behaviour is best explained by which Principal Component.
-```{r}
-
-
-var <- get_pca_var(pca1)
-var
-head(var$coord)
-head(var$cos2)
-head(var$contrib)
-
-autoplot(var$cor, main = "Heat map")
-```
-From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
-
-correlation circle:
-```{r}
-fviz_pca_var(pca1, col.var = "black")
-```
-
-This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and 
-grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours.
-
-Individuals PCA
-```{r}
-autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
-```
-
-This plot with ellipses shows the distribution of each behaviour following each treatment
-From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap
 
 ###  3.weight
 =======
@@ -157,12 +99,29 @@ From this plot we can conclude that there is no significant difference between t
 
 In this project, the objectives will be to reproduce the analysis done by the team that conducted the study. Further analysis can be conducted, at the recommendation of the coordinating professor.
 
-Obj 1:  Effect of treatment on survival.
-H0:
-H1:
+OBJECTIVE TREATMENT ON SURVIVAL
+Hypothesis 1:
+H0: Treatments do not affect survival
+H1: Treatments affect survival
 
 Hypothesis 1': Redefine survival  and redo the analyses
+H0': Treatments do not affect survival
+H1': Treatments affect survival
 
+
+OBJECTIVE OF BEHAVIOUR STUDY
+To study if the exposure to different concentrations of thiamethoxam during the larval stage affects the behaviour of hoverflies as adults.
+
+Hypothesis 0: The amount of thiamethoxam hoverfly larvae are exposed to affects their behaviour as adults.
+Hypothesis 1: The amount of thiamethoxam hoverfly larvae are exposed to does not affect their behaviour as adults.
+
+
+
+OBJECTIVE OF WEIGHT DATA
+To analyse the response of larvae weights to different concentration of thiamethoxan 
+Hypothesis:
+H0: Larval weight does not depend upon the concentration of insecticide it is exposed to. 
+H1: Larval weight depends upon the concentration of insecticide it is exposed to.
 
 
 
@@ -179,6 +138,12 @@ Same results are obtained with the redefined survival. We redefine survival as t
 ---
 
 We also did an anova for the effect of treatment on the time to pupate. The effects of the blocks and the interaction between blocks and treatment was studied. No interaction (p = 0.27), we proceed with the anova. The anova has shown significantly different effects. Furthermore, a HSD test showed two tipes
+
+
+Methods for weight
+Initial and final weight were made into different data frames. This was needed to find weight gain of the larvae. There is a difference in the number of rows between the newly created data frames, because some larvae escaped before the final weight and some immediately after the first weight, as a such, replicates having both the final and the initial weight were pulled to make a data frame. ANOVA and a Kruskal-Wallis test were used to check the effect of treatment on the larval weight.  Shapiro.test was used to check normality of data. 
+
+
 
 ## 6. Results. Figures and tables with captions and description of what do they mean.
 
@@ -371,6 +336,177 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 #Conclusions:
 #Treatment 500 is the only one that shows significant differences in comparison with the control.
 
+
+```
+
+
+METHODS AND RESULTS
+we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.
+
+Step 1. Organizing the data. 
+We had to convert our data from the tibble format to a numeric dataframe. 
+```{r}
+behaviour1 <- beha  ## making a copy of the originaml dataframe
+behaviour1 <- as.data.frame(behaviour1)
+row.names(behaviour1) <- paste(behaviour1$sample,
+                               behaviour1$exp_round, sep = "_")
+b1 <-select(behaviour1, S:M)
+b2 <- data.frame(as.factor(beha$treatment), b1)
+colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
+
+```
+
+Step 2.Analysis
+
+We ran the prcomp command to run a PCA on our dataframe. 
+```{r}
+pca1 <- prcomp(b1, scale = TRUE)
+
+##Eigen values
+eig.val <- get_eigenvalue(pca1)
+
+##Scree plot
+fviz_eig(pca1, addlabels = TRUE)
+```
+From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.
+
+Heat mapping:
+The heat map explains shows which behaviour is best explained by which Principal Component.
+```{r}
+
+
+var <- get_pca_var(pca1)
+var
+head(var$coord)
+head(var$cos2)
+head(var$contrib)
+
+autoplot(var$cor, main = "Heat map")
+```
+From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
+
+correlation circle:
+```{r}
+fviz_pca_var(pca1, col.var = "black")
+```
+
+This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and 
+grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours.
+
+Individuals PCA
+```{r}
+autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
+```
+
+This plot with ellipses shows the distribution of each behaviour following each treatment
+From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap
+
+
+
+Weight
+```{r, echo=FALSE}
+lavalweight <- weig
+View(lavalweight)
+
+### Make new data.frames from lavalweight for the initial and final time (1 & 4)
+#for optimum analysis
+
+Initialwgt <- filter(lavalweight, Time == 1)
+Finalwgt <- filter(lavalweight, Time == 4)
+
+###Find the difference between the final and initial weight. There is a difference
+## in the number of row between the newly created data.frames, because some lavae
+#escaped before the final weight and some immediately after the first weight, so 
+#there is a need to get those reps that have both the final and the initial weight 
+#to get the difference in weight.
+
+Fordifference <- filter(lavalweight, Time == 4)
+
+
+Initialweight <- replicate(153, 0)
+Fordifference <- data.frame(Fordifference, Initialweight)
+
+for(i in 1:nrow(Fordifference)){
+  for(j in 1:nrow(Initialwgt)){
+  if(Fordifference$Rep[i] == Initialwgt$Rep[j]){
+    Fordifference$Initialweight[i] <- Initialwgt$weight[j]
+  }}}
+
+###Change the weight to final weight to differentiate between initial and final weight
+colnames(Fordifference)[colnames(Fordifference) == "weight"] <- "Finalweight"
+
+##Create another column for difference between final and initial weight
+Fordifference$Difference <- (Fordifference$Finalweight - Fordifference$Initialweight)
+
+##Remove the column time from the data.frame
+Fordifference <-  select(Fordifference, -Time)
+
+##Arrange the column of the data.frame in the order below
+Fordifference <- Fordifference[c("Rep", "Treatment", "FIL", "Initialweight", 
+                                 "Finalweight", "Difference")]
+
+##Check the structure of newly created dataframes
+str(Fordifference)
+
+## The treatment, FIL and Time were integer, so i needed to convert them to a 
+##factor for easier manipulation.
+Fordifference$Treatment <- as.factor(Fordifference$Treatment)
+Fordifference$FIL <- as.factor(Fordifference$FIL)
+
+str(Fordifference)
+
+#One-way ANOVA to determine the effect of thiamethoxam on weight
+res.aov<- aov(Difference ~ Treatment, data = Fordifference)
+summary(res.aov)
+
+#Test for normality using the Shapiro–Wilk statistic.Making a Q-Q plot  
+##This can only be done after ANOVA
+
+shapiro.test(res.aov$residuals)
+qqnorm(res.aov$residuals)
+qqline(res.aov$residuals)
+
+## Based on the shapiro.test, we can conclude that the distribution of the treatment
+## effect was significantly different from normal distribution
+
+
+##LeveneTest for equality of Variance
+#Hypothesis
+#H0: The variance for all groups are equal
+#H1: At least one variance is not equal
+
+
+leveneTest(Difference ~ Treatment, data = Fordifference)
+
+#Based on the LeveneTest, the variance for all the groups are equal
+
+
+#Kruskal Wallis to determine the effect of thiamethoxam on pupal weight
+
+kruz <- kruskal(Fordifference$Difference, trt = Fordifference$Treatment)
+print(kruz)
+
+##Based on the Kruskal Wallis test, there is no significant difference between 
+## treatments
+
+##Make a plot for visual representation of the analysis
+Fordifference %>%
+  ggplot(aes(x = Treatment, group = Treatment, y = Difference, fill = Treatment)) +
+  geom_violin(trim = FALSE) + 
+  geom_boxplot(width = 0.2) +
+  scale_y_continuous(limits = c(0.15, 0.50)) +
+  theme_gray() +
+  xlab("Treatment") + 
+  ylab("Weight")
+  
+
+ ###Fisher's test
+fil <- table(Fordifference$FIL, Fordifference$Treatment)
+fil
+fisher.test(fil)
+
+ #p-value 0.3198 is greater than 0.05, therefore, 
+##there is no sufficient evidence to accept the alternative hypothesis
 
 ```
 
