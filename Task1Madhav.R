@@ -7,6 +7,18 @@ library(factoextra)
 library(cluster)
 library(corrplot)
 
+##The behaviour data records the time spent by 7 day old adult hoverflies.
+##Seven adult behaviours were studied for 10 minutes (600 seconds) and
+##the time spent on each behaviour was recorded in seconds. 
+##The behaviours studied are - 
+#S- stationary
+#GR- grooming
+#W- walking
+#F- flying
+#PR- probing through the cage netting with their proboscis
+#N- feeding on nectar, pollen, and water
+#M- moving, which includes making small jerking motion while being stationary
+
 
 ### Principal component analysis for the behaviour data
 ##First step: Converting the dataframe to numeric
@@ -53,3 +65,4 @@ autoplot(var$cor)
 autoplot(pca1, data = b2, colour = 'treatment')
 autoplot(pam(b2, 7),frame = TRUE, frame.type = 'norm')
 autoplot(pam(b2, 7),colour = "treatment", frame = TRUE, frame.type = 'norm')
+autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
