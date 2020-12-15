@@ -11,7 +11,6 @@ output:
 
 library(ggplot2)
 library(agricolae)
-library( RVAideMemoire)
 library(stringr)
 library(tidyverse)
 library(survival)
@@ -22,6 +21,7 @@ library(ggfortify)
 library(factoextra)
 library(cluster)
 library(corrplot)
+library(RVAideMemoire)
 
 source("01_import-data.R")
 
@@ -114,6 +114,14 @@ From the Eigen values and the Scree plot of our PCA we understand that Principal
 Heat mapping:
 The heat map explains shows which behaviour is best explained by which Principal Component.
 ```{r}
+
+
+var <- get_pca_var(pca1)
+var
+head(var$coord)
+head(var$cos2)
+head(var$contrib)
+
 autoplot(var$cor, main = "Heat map")
 ```
 From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
