@@ -28,6 +28,11 @@ library(car)
 
 
 ```
+![The studied insects and substance](data/collage1.png)
+![The studied insects: hoverfly Eristalis tenax adult and larva](data/collage 2.png)
+
+
+
 
 ## 3. Introduction. Explain the origin and structure of your data.
 Data comes from: https://peerj.com/articles/4258/, which is Effects of chronic exposure to thiamethoxam on larvae of the hoverfly Eristalis tenax (Diptera, Syrphidae).
@@ -38,7 +43,7 @@ Five-day old larvae were exposed to six concentrations of the pesticide measured
 4 rounds of experiment
 Total of 40 larvae were studied for each treatment. 
 
-This resulted in 3 tables that we use as data frames: survival, behaviour, 
+This resulted in 3 tables that we use as data frames: survival, behaviour, weight.
 
 ###   a.survival
 
@@ -51,17 +56,11 @@ survived (5 days to time it forms a pupae)
 <br/> 5.time to pup - if it never reached adulthood, daysinxp are considered 0
 <br/> 6.dead - mortality (yes or no) 
 
-<<<<<<< HEAD
 
-###   2.behaviour
-
-INTRODUCTION
-
-=======
+---
 
 ###   b.behaviour
 
->>>>>>> 57b8581b12941159b67d317f8263b7bea6319395
 The behaviour data records the time spent by 7 day old adult hoverflies.
 Seven adult behaviours were studied for 10 minutes (600 seconds) and
 the time spent on each behaviour was recorded in seconds. 
@@ -74,18 +73,15 @@ PR- probing through the cage netting with their proboscis
 N- feeding on nectar, pollen, and water
 M- moving, which includes making small jerking motion while being stationary
 
-<br/> 1.The block (1,2,3,4)
+<br/> 1.The blocks (1,2,3,4)
 <br/> 2.Sample: a notation of the enclosed space it was studied
 <br/> 3.Treatment: Control (0),T1=5, T2= 15, T3= 50, T4= 100, T5= 500 (quantity of substance applied)
 <br/> 4.Sex of the insect
 <br/> 5.6.7.8.9.10.11. the studied behaviours
 <br/> 12.The time of study is identical for all insects: 10 minutes (600 seconds)
 
-<<<<<<< HEAD
+---
 
-
-###  3.weight
-=======
 ###  c.weight
 
 <br/> 1.Rep = the block and the number of the repetition
@@ -93,13 +89,14 @@ M- moving, which includes making small jerking motion while being stationary
 <br/> 3.Time (1 represents day 3, 2 day 6, 3 day 9, 4 day 12); the ones that died have measured only their last living weight
 <br/> 4.FIL - Found in leaves: some insects escape and are found afterwards in the surroundings
 <br/> 5.weight - in grams
->>>>>>> 57b8581b12941159b67d317f8263b7bea6319395
+
+---
 
 ## 4. Objectives and hypotheses.
 
 In this project, the objectives will be to reproduce the analysis done by the team that conducted the study. Further analysis can be conducted, at the recommendation of the coordinating professor.
 
-OBJECTIVE TREATMENT ON SURVIVAL
+### OBJECTIVE TREATMENT ON SURVIVAL
 Hypothesis 1:
 H0: Treatments do not affect survival
 H1: Treatments affect survival
@@ -109,7 +106,7 @@ H0': Treatments do not affect survival
 H1': Treatments affect survival
 
 
-OBJECTIVE OF BEHAVIOUR STUDY
+### OBJECTIVE OF BEHAVIOUR STUDY
 To study if the exposure to different concentrations of thiamethoxam during the larval stage affects the behaviour of hoverflies as adults.
 
 Hypothesis 0: The amount of thiamethoxam hoverfly larvae are exposed to affects their behaviour as adults.
@@ -117,7 +114,7 @@ Hypothesis 1: The amount of thiamethoxam hoverfly larvae are exposed to does not
 
 
 
-OBJECTIVE OF WEIGHT DATA
+### OBJECTIVE OF WEIGHT DATA
 To analyse the response of larvae weights to different concentration of thiamethoxan 
 Hypothesis:
 H0: Larval weight does not depend upon the concentration of insecticide it is exposed to. 
@@ -128,26 +125,41 @@ H1: Larval weight depends upon the concentration of insecticide it is exposed to
 
 ## 5. Methods. What have you done? And what did you use to do it? Step by step, so anyone could do it again by reading this part.
 
-For hypothesis 1, 1':
 ---
+
+<span style="color: red;">Important note: you will find the code for the analysis like this:
+<br/> survival - Task1Serban.R
+<br/> weight - Task1Gabriel.R
+<br/> behaviour - Task1Madhav.R and Task1Maya.R
+</span>
+
+--- 
+
+### Methods for survival:
+
 We plot the survival to study the effects of blocks and treatments. As we observe differences, we proceed to do a linear model  with the blocks as median. It confirms that Treatment 500 has an effect on survival. After that, we do a linear model to study the interaction between treatments and blocks. With a p_value = 0.3738 we conclude that no interaction can be proved. We proceed to find if there are any different effects of treatment on survival. 
 Because the data is categorical, we use a fisher test. After a simple fisher test shows significant differences between treatments, we proceed with a multicomparison fisher test. It showed that treatment500 has significant differences with all of them, between the others there is no significant difference. 
+
+The plot will also be ploted with Kaplan-Meier curves for a better visualisation.
 
 Same results are obtained with the redefined survival. We redefine survival as the larvae that survived pupation and their behaviour could be studied as adults. Unfrtunately, we couldn't correlate each individual from surival with the ones form behaviour.
 
 ---
 
-We also did an anova for the effect of treatment on the time to pupate. The effects of the blocks and the interaction between blocks and treatment was studied. No interaction (p = 0.27), we proceed with the anova. The anova has shown significantly different effects. Furthermore, a HSD test showed two tipes
+We also did an anova for the effect of treatment on the time to pupate. The effects of the blocks and the interaction between blocks and treatment was studied. No interaction (p = 0.27), we proceed with the anova. The anova has shown significantly different effects. Furthermore, a HSD test showed two types of effects: a and b.
 
 
-Methods for weight
+### Methods for weight
 Initial and final weight were made into different data frames. This was needed to find weight gain of the larvae. There is a difference in the number of rows between the newly created data frames, because some larvae escaped before the final weight and some immediately after the first weight, as a such, replicates having both the final and the initial weight were pulled to make a data frame. ANOVA and a Kruskal-Wallis test were used to check the effect of treatment on the larval weight.  Shapiro.test was used to check normality of data. 
 
+### Metods for behaviour:
 
+we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.Other metods were too complex to be explained here, detailed with plots in results.
 
 ## 6. Results. Figures and tables with captions and description of what do they mean.
 
-### Effect of treatments on survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
+### a1. Effect of treatments on survival (multi-comp Fisher Test): 
+#### treatment500 has significant differences with all of them, between the others there is no significant difference
 
 ```{r effect of treatments on survival, echo=TRUE}
 #Step 1: We plot it in order to see if:
@@ -192,7 +204,7 @@ fisher.multcomp(t1)
 
 
 ```
-### Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
+### a2. Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
 
 ```{r effect of treatments on REDEFINED survival, error=FALSE, echo=TRUE}
 #Redefine survival and redo the analyses
@@ -269,7 +281,7 @@ fisher.multcomp(t1)
 #Treatment500 has significant differences with all of them, between them there is no significant difference
 ```
 
-### A plot that puts survival in perspective
+### a3. A plot that puts survival and pupate in perspective (Kaplan-Meier curves)
 
 ```{r Kaplan-Meier curves, error=FALSE, echo=TRUE}
 
@@ -289,22 +301,24 @@ fit1 <- survfit(surv_object ~ treatment, data = survival)
 ggsurvplot(fit1, data = survival, pval = TRUE)
 
 
-#Now we do the same with time to pupate. We found it already hard to read, because of the numerous treatments so we decided to include the time to pupate in another ggplot.
-surv_object <- Surv(time = survival$timetopup, event = survival$dead)
-fit2 <- survfit(surv_object ~ treatment, data = survival)
-#summary(fit2)
-ggsurvplot(fit2, data = survival, pval = TRUE)
-
-#As many insects die while on treatment 500, the plot for time to pupate isn't very conclusive.
 ```
 
 
 
-### Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
+### b. Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
 
 ```{r Effect of treatments on time to pupate (ANOVA), error=FALSE, echo=TRUE}
 
 #Part 2 - Analysis on time to pupate on the original defined survival, as for the redefined we weren't able to identify the individuals
+
+#Now we do the same with time to pupate. We found it already hard to read, because of the numerous treatments so we decided to include the time to pupate in another ggplot.
+surv_object <- Surv(time = survival$timetopup, event = survival$dead)
+fit2 <- survfit(surv_object ~ treatment, data = survival)
+#summary(fit2)
+ggsurvplot(fit2, data = survival, main = "survival for pupate", pval = TRUE)
+
+#As many insects die while on treatment 500, the plot for time to pupate isn't very conclusive.
+
 #ANOVA
 
 survival <- surv
@@ -339,11 +353,10 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 
 ```
 
+### c. Effects of treatments on behaviour
 
-METHODS AND RESULTS
-we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.
 
-Step 1. Organizing the data. 
+##### Step 1. Organizing the data. 
 We had to convert our data from the tibble format to a numeric dataframe. 
 ```{r}
 behaviour1 <- beha  ## making a copy of the originaml dataframe
@@ -356,7 +369,7 @@ colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
 
 ```
 
-Step 2.Analysis
+##### Step 2.Analysis
 
 We ran the prcomp command to run a PCA on our dataframe. 
 ```{r}
@@ -511,12 +524,8 @@ fisher.test(fil)
 ```
 
 ## 7. Discussion. From your objectives.
+Are to be done for the final presentation.
 
 ## 8. Conclusions.
 We conclude that this project was hard but we learned a lot of stuff.
 
-## Analysis on survival
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
