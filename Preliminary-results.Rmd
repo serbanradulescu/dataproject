@@ -1,6 +1,6 @@
 ---
 title: "1. Title:Preliminary-results"
-author: "2. Team members names: Maya Hachicha, Gabriel Omobamidele, Madhav Chandarana, Radulescu Serban"
+author: "2. Team members names: Maya Hachicha, Gabriel Olawuyi, Madhav Chandarana, Radulescu Serban"
 date: "15/12/2020"
 output: html_document
 ---
@@ -9,15 +9,34 @@ output: html_document
 ###   1.survival
 
  survival is a dataset with 6 column:
-1.the ID of repetition
-2.exp_round - different blocks, with 8 repetitions
-3.treatment - Control (0),T1= 15, T2= 50, T3= 100, T4= 500
-4.daysinxp  - the amount of days it needs to reach pupae and so to be considered
+<br/> 1.the ID of repetition
+<br/> 2.exp_round - different blocks, with 8 repetitions
+<br/> 3.treatment - Control (0),T1=5, T2= 15, T3= 50, T4= 100, T5= 500 (quantity of substance applied)
+<br/> 4.daysinxp  - the amount of days it needs to reach pupae and so to be considered
 survived (5 days to time it forms a pupae)
-5.time to pup - if it never reached adulthood, daysinxp are considered 0
-6.dead - mortality (yes or no) 
+<br/> 5.time to pup - if it never reached adulthood, daysinxp are considered 0
+<br/> 6.dead - mortality (yes or no) 
 
 ###   2.behaviour
+The behaviour data records the time spent by 7 day old adult hoverflies.
+Seven adult behaviours were studied for 10 minutes (600 seconds) and
+the time spent on each behaviour was recorded in seconds. 
+The behaviours studied are - 
+S- stationary
+GR- grooming
+W- walking
+F- flying
+PR- probing through the cage netting with their proboscis
+N- feeding on nectar, pollen, and water
+M- moving, which includes making small jerking motion while being stationary
+
+<br/> 1.The block (1,2,3,4)
+<br/> 2.Sample: a notation of the enclosed space it was studied
+<br/> 3.Treatment: Control (0),T1=5, T2= 15, T3= 50, T4= 100, T5= 500 (quantity of substance applied)
+<br/> 4.Sex of the insect
+<br/> 5.6.7.8.9.10.11. the studied behaviours
+<br/> 12.The time of study is identical for all insects: 10 minutes (600 seconds)
+
 
 ###  3.weight
 
@@ -25,9 +44,25 @@ survived (5 days to time it forms a pupae)
 
 In this project, the objectives will be to reproduce the analysis done by the team that conducted the study. Further analysis can be conducted, at the recommendation of the coordinating professor.
 
+Hypothesis 1:  Effect of treatment on survival.
+Hypothesis 1': Redefine survival  and redo the analyses
+
+
+
 ## 5. Methods. What have you done? And what did you use to do it? Step by step, so anyone could do it again by reading this part.
 
+For hypothesis 1, 1': We plot the survival to study the effects of blocks and treatments. As we observe differences, we proceed to do a linear model  with the blocks as median. It confirms that Treatment 500 has an effect on survival. After that, we do a linear model to study the interaction between treatments and blocks. With a p_value = 0.3738 we conclude that no interaction can be proved. 
+Because the data is categorical, we use a fisher test. After a simple fisher test shows significant differences between treatments, we proceed with a multicomparison fisher test. It showed that treatment500 has significant differences with all of them, between the others there is no significant difference. 
+
+Same results are obtained with the redefined survival.
+
+We also did an anova for the effect of treatment on the time to pupate. The effects of the blocks and the interaction between blocks and treatment was studied. 
+
 ## 6. Results. Figures and tables with captions and description of what do they mean.
+
+
+
+Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
 
 ## 7. Discussion. From your objectives.
 
