@@ -6,8 +6,7 @@ library(car)
 library(agricolae)
 library(ggplot2)
 
-
-## Analyze the effect of treatments on larvae weight(working with the dataframe weight)
+## The essence of this part is to analyze the effect of treatments on larvae weight(working with the dataframe weight)
 
 ### Hypothesis:
 #H0: Larval weight does not depend upon the concentration of insecticide it is exposed to. 
@@ -22,8 +21,6 @@ View(lavalweight)
 
 Initialwgt <- filter(lavalweight, Time == 1)
 Finalwgt <- filter(lavalweight, Time == 4)
-
-
 
 ###Find the difference between the final and initial weight. There is a difference
 ## in the number of row between the newly created data.frames, because some lavae
@@ -66,7 +63,6 @@ Fordifference$FIL <- as.factor(Fordifference$FIL)
 
 str(Fordifference)
 
-
 #One-way ANOVA to determine the effect of thiamethoxam on weight
 res.aov<- aov(Difference ~ Treatment, data = Fordifference)
 summary(res.aov)
@@ -78,6 +74,8 @@ shapiro.test(res.aov$residuals)
 qqnorm(res.aov$residuals)
 qqline(res.aov$residuals)
 
+## Based on the shapiro.test, we can conclude that the distribution of the treatment
+## effect was significantly different from normal distribution
 
 
 ##LeveneTest for equality of Variance
@@ -91,10 +89,13 @@ leveneTest(Difference ~ Treatment, data = Fordifference)
 #Based on the LeveneTest, the variance for all the groups are equal
 
 
-#Kruskal Wallis to to determine the effect of thiamethoxam on pupal weight
+#Kruskal Wallis to determine the effect of thiamethoxam on pupal weight
 
 kruz <- kruskal(Fordifference$Difference, trt = Fordifference$Treatment)
 print(kruz)
+
+##Based on the Kruskal Wallis test, there is no significant difference between 
+## treatments
 
 ##Make a plot for visual representation of the analysis
 Fordifference %>%
@@ -112,7 +113,16 @@ fil <- table(Fordifference$FIL, Fordifference$Treatment)
 fil
 fisher.test(fil)
 
-
+ #p-value 0.3198 is greater than 0.05, therefore, 
+##there is no sufficient evidence to accept the alternative hypothesis
 
 ###########
 
+
+
+
+
+
+
+
+            
