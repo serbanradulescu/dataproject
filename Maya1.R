@@ -29,3 +29,4 @@ fviz_pca_ind(res.pca,
              repel = TRUE
 )
 
+#new
