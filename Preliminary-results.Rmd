@@ -7,7 +7,25 @@ output:
     code_folding: hide
 ---
 
+```{r libraries and importat of data, include = FALSE, echo=TRUE}
 
+library(ggplot2)
+library(agricolae)
+library(stringr)
+library(tidyverse)
+library(survival)
+library(survminer)
+library(dplyr)
+library(tidyr)
+library(ggfortify)
+library(factoextra)
+library(cluster)
+library(corrplot)
+library(RVAideMemoire)
+
+source("01_import-data.R")
+
+```
 
 ## 3. Introduction. Explain the origin and structure of your data.
 Data comes from: https://peerj.com/articles/4258/, which is Effects of chronic exposure to thiamethoxam on larvae of the hoverfly Eristalis tenax (Diptera, Syrphidae).
@@ -31,7 +49,12 @@ survived (5 days to time it forms a pupae)
 <br/> 5.time to pup - if it never reached adulthood, daysinxp are considered 0
 <br/> 6.dead - mortality (yes or no) 
 
+<<<<<<< HEAD
+###   2.behaviour
+INTRODUCTION
+=======
 ###   b.behaviour
+>>>>>>> 57b8581b12941159b67d317f8263b7bea6319395
 The behaviour data records the time spent by 7 day old adult hoverflies.
 Seven adult behaviours were studied for 10 minutes (600 seconds) and
 the time spent on each behaviour was recorded in seconds. 
@@ -51,6 +74,76 @@ M- moving, which includes making small jerking motion while being stationary
 <br/> 5.6.7.8.9.10.11. the studied behaviours
 <br/> 12.The time of study is identical for all insects: 10 minutes (600 seconds)
 
+<<<<<<< HEAD
+OBJECTIVE
+To study if the exposure to different concentrations of thiamethoxam during the larval stage affects the behaviour of hoverflies as adults.
+
+Hypothesis 0: The amount of thiamethoxam hoverfly larvae are exposed to affects their behaviour as adults.
+Hypothesis 1: The amount of thiamethoxam hoverfly larvae are exposed to does not affect their behaviour as adults.
+
+METHODS AND RESULTS
+we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.
+
+Step 1. Organizing the data. 
+We had to convert our data from the tibble format to a numeric dataframe. 
+```{r}
+behaviour1 <- beha  ## making a copy of the originaml dataframe
+behaviour1 <- as.data.frame(behaviour1)
+row.names(behaviour1) <- paste(behaviour1$sample,
+                               behaviour1$exp_round, sep = "_")
+b1 <-select(behaviour1, S:M)
+b2 <- data.frame(as.factor(beha$treatment), b1)
+colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
+
+```
+
+Step 2.Analysis
+
+We ran the prcomp command to run a PCA on our dataframe. 
+```{r}
+pca1 <- prcomp(b1, scale = TRUE)
+
+##Eigen values
+eig.val <- get_eigenvalue(pca1)
+
+##Scree plot
+fviz_eig(pca1, addlabels = TRUE)
+```
+From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.
+
+Heat mapping:
+The heat map explains shows which behaviour is best explained by which Principal Component.
+```{r}
+
+
+var <- get_pca_var(pca1)
+var
+head(var$coord)
+head(var$cos2)
+head(var$contrib)
+
+autoplot(var$cor, main = "Heat map")
+```
+From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
+
+correlation circle:
+```{r}
+fviz_pca_var(pca1, col.var = "black")
+```
+
+This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and 
+grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours.
+
+Individuals PCA
+```{r}
+autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
+```
+
+This plot with ellipses shows the distribution of each behaviour following each treatment
+From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap
+
+###  3.weight
+=======
 ###  c.weight
 
 <br/> 1.Rep = the block and the number of the repetition
@@ -58,6 +151,7 @@ M- moving, which includes making small jerking motion while being stationary
 <br/> 3.Time (1 represents day 3, 2 day 6, 3 day 9, 4 day 12); the ones that died have measured only their last living weight
 <br/> 4.FIL - Found in leaves: some insects escape and are found afterwards in the surroundings
 <br/> 5.weight - in grams
+>>>>>>> 57b8581b12941159b67d317f8263b7bea6319395
 
 ## 4. Objectives and hypotheses.
 
@@ -70,17 +164,7 @@ H1:
 Hypothesis 1': Redefine survival  and redo the analyses
 
 
-```{r libraries and importat of data, include = FALSE, echo=TRUE}
 
-library(ggplot2)
-library(agricolae)
-library( RVAideMemoire)
-library(stringr)
-library(tidyverse)
-
-source("01_import-data.R")
-
-```
 
 
 ## 5. Methods. What have you done? And what did you use to do it? Step by step, so anyone could do it again by reading this part.
@@ -91,7 +175,9 @@ We plot the survival to study the effects of blocks and treatments. As we observ
 Because the data is categorical, we use a fisher test. After a simple fisher test shows significant differences between treatments, we proceed with a multicomparison fisher test. It showed that treatment500 has significant differences with all of them, between the others there is no significant difference. 
 
 Same results are obtained with the redefined survival. We redefine survival as the larvae that survived pupation and their behaviour could be studied as adults. Unfrtunately, we couldn't correlate each individual from surival with the ones form behaviour.
+
 ---
+
 We also did an anova for the effect of treatment on the time to pupate. The effects of the blocks and the interaction between blocks and treatment was studied. No interaction (p = 0.27), we proceed with the anova. The anova has shown significantly different effects. Furthermore, a HSD test showed two tipes
 
 ## 6. Results. Figures and tables with captions and description of what do they mean.
@@ -217,6 +303,36 @@ fisher.multcomp(t1)
 
 #Treatment500 has significant differences with all of them, between them there is no significant difference
 ```
+
+### A plot that puts survival in perspective
+
+```{r Kaplan-Meier curves, error=FALSE, echo=TRUE}
+
+
+
+survival <- surv
+
+#we create the surv_object, which is a compiled version of the daysinexp and dead columns that can be interpreted using the survfit function
+ 
+surv_object <- Surv(time = survival$daysinexp, event = survival$dead)
+
+#Now we do the Kaplan-Meier curves
+ 
+fit1 <- survfit(surv_object ~ treatment, data = survival)
+#summary(fit1)
+#We plot the Kaplan-Meier curves so we can see better
+ggsurvplot(fit1, data = survival, pval = TRUE)
+
+
+#Now we do the same with time to pupate. We found it already hard to read, because of the numerous treatments so we decided to include the time to pupate in another ggplot.
+surv_object <- Surv(time = survival$timetopup, event = survival$dead)
+fit2 <- survfit(surv_object ~ treatment, data = survival)
+#summary(fit2)
+ggsurvplot(fit2, data = survival, pval = TRUE)
+
+#As many insects die while on treatment 500, the plot for time to pupate isn't very conclusive.
+```
+
 
 
 ### Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
