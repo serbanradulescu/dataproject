@@ -5,6 +5,7 @@ library(dplyr)
 library(car)
 library(agricolae)
 library(ggplot2)
+library(ggpubr)
 
 ## The essence of this part is to analyze the effect of treatments on larvae weight(working with the dataframe weight)
 
@@ -97,15 +98,27 @@ print(kruz)
 ##Based on the Kruskal Wallis test, there is no significant difference between 
 ## treatments
 
-##Make a plot for visual representation of the analysis
+##Make a plot for visual representation of the analysis and comparison between treatments and control
+my_comparisons <- list(c("0", "5"), c("0", "15"),c("0", "50"),c("0", "100"),
+                       c("0", "500"), c("5", "15"),c("5", "50"),c("5", "100"),
+                       c("5", "500"),c("15", "50"),c("15", "100"), c("15", "500"),
+                       c("50", "100"), c("50", "500"), c("100", "500"))
 Fordifference %>%
-  ggplot(aes(x = Treatment, group = Treatment, y = Difference, fill = Treatment)) +
-  geom_violin(trim = FALSE) + 
-  geom_boxplot(width = 0.2) +
-  scale_y_continuous(limits = c(0.15, 0.50)) +
-  theme_gray() +
+  ggplot(aes(x = Treatment, group = Treatment, y = Difference, color = Treatment)) +
+  geom_boxplot() +
+  theme_classic()+
+  scale_y_continuous(limits = c(0.15, 0.75)) +
   xlab("Treatment") + 
-  ylab("Weight")
+  ylab("Weight")+
+  stat_compare_means(method = "kruskal.test")+
+  stat_compare_means(comparisons = my_comparisons,label.y = c(0.38,0.40,0.42,
+                                                              0.44,0.46,0.48,
+                                                              0.50,0.52,0.55,
+                                                              0.58,0.61,0.64,
+                                                              0.67,0.70,0.73))+
+  stat_compare_means(label.y = 75)
+  
+
 
  ###Fisher's test
 fil <- table(Fordifference$FIL, Fordifference$Treatment)
@@ -122,6 +135,3 @@ fisher.test(fil)
 
 
 
-
-
-            

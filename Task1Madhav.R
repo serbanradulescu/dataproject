@@ -94,3 +94,32 @@ shapiro.test(beh.aovF$residuals)
 shapiro.test(beh.aovPR$residuals)
 shapiro.test(beh.aovN$residuals)
 shapiro.test(beh.aovM$residuals)
+
+##From the p values of the Shapiro Wilk statistic we can conclude that 
+##not of the behaviours follow a normal distribution. 
+
+##Kruskal Wallis test
+krusS <- kruskal(b2$S, trt = b2$treatment, alpha = 0.01)
+print(krusS)
+krusGR <- kruskal(b2$GR, trt = b2$treatment, alpha = 0.01)
+print(krusGR)
+krusW <- kruskal(b2$W, trt = b2$treatment, alpha = 0.01)
+print(krusW)
+krusF <- kruskal(b2$F, trt = b2$treatment, alpha = 0.01)
+print(krusF)
+krusPR <- kruskal(b2$PR, trt = b2$treatment, alpha = 0.01)
+print(krusPR)
+krusN <- kruskal(b2$N, trt = b2$treatment, alpha = 0.01)
+print(krusN)
+krusM <- kruskal(b2$M, trt = b2$treatment, alpha = 0.01)
+print(krusM)
+
+### Comparing the effect of weight on behaviour
+Weight1 <- filter(weig, FIL == 0)
+a <- as.numeric()
+for(i in levels(as.factor(Weight1$Treatment))){
+   a <-c(a,mean(Weight1$weight[which(Weight1$Treatment == i)]))
+}
+a
+M <- filter(Weight1, Treatment == 15)
+mean(M$weight)
