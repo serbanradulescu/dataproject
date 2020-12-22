@@ -94,22 +94,18 @@ shapiro.test(anovN$residuals)
 shapiro.test(anovM$residuals)
 
 #Kruskal Wallis 
-krusS<-kruskal.test(S ~ treatment, data = beha)
-
+krusS<-kruskal(beha$S, trt = beha$treatment, alpha= 0.01)
 print(krusS)
-krusGR<-kruskal.test(GR ~ treatment, data =beha )
+krusGR<-kruskal(beha$GR, trt= beha$treatment, aalpha = 0.01)
 print(krusGR)
-
-krusW<-kruskal.test(W ~ treatment, data = beha)
+krusW<-kruskal(W ~ treatment, data = beha)
 print(krusW)
-krusF<-kruskal.test(F ~ treatment, data = beha)
+krusF<-kruskal(F ~ treatment, data = beha)
 print(krusF)
-krusPR<-kruskal.test(PR ~ treatment, data = beha)
-
-
+krusPR<-kruskal(PR ~ treatment, data = beha)
 print(krusPR)
-krusN<-kruskal.test(N ~ treatment, data = beha)
+krusN<-kruskal(N ~ treatment, data = beha)
 print(krusN)
-krusM<-kruskal.test(M ~ treatment, data = beha)
+krusM<-kruskal(M ~ treatment, data = beha)
 print(krusM)
 
