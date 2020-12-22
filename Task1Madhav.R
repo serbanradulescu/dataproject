@@ -59,7 +59,7 @@ head(var$contrib)
 
 
 ##Heat map
-autoplot(var$cor)
+autoplot(var$cor, main = "Heat map")
 ##Plotting the correlation circle
 fviz_pca_var(pca1, col.var = "black")
 
@@ -67,3 +67,30 @@ fviz_pca_var(pca1, col.var = "black")
 ##Individuals PCA
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 
+###Anova, Shapiro Wilk and Kruskal Wallis
+
+##Anovas for individual behaviours
+beh.aovS <- aov(S ~ treatment, data = b2)
+summary.aov(beh.aovS)
+beh.aovGR<- aov(GR ~ treatment, data = b2)
+summary.aov(beh.aovGR)
+beh.aovW <- aov(W ~ treatment, data = b2)
+summary.aov(beh.aovW)
+beh.aovF <- aov(F ~ treatment, data = b2)
+summary.aov(beh.aovF)
+beh.aovPR <- aov(PR ~ treatment, data = b2)
+summary.aov(beh.aovPR)
+beh.aovN <- aov(N ~ treatment, data = b2)
+summary.aov(beh.aovN)
+beh.aovM <- aov(M ~ treatment, data = b2)
+summary(beh.aovM)
+
+
+##Shapiro Wilk test for normality for each behaviour
+shapiro.test(beh.aovS$residuals)
+shapiro.test(beh.aovGR$residuals)
+shapiro.test(beh.aovW$residuals)
+shapiro.test(beh.aovF$residuals)
+shapiro.test(beh.aovPR$residuals)
+shapiro.test(beh.aovN$residuals)
+shapiro.test(beh.aovM$residuals)
