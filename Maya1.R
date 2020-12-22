@@ -66,6 +66,50 @@ fviz_pca_var(pca1, col.var = "black")
 ##Individuals PCA
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 
+#To determine the effect of treatments in behaviour we can apply Kruskal Wallis for each behaviour
+#to do this first we have to do anova then shapiro for residuals 
+
+anovS<-aov(S~treatment, data= beha)
+summary(anovS)
+anovGR<-aov(GR~treatment, data= beha)
+summary(anovGR)
+anovW<-aov(W~treatment, data= beha)
+summary(anovW)
+anovF<-aov(F~treatment, data= beha)
+summary(anovF)
+anovPR<-aov(PR~treatment, data= beha)
+summary(anovPR)
+anovN<-aov(N~treatment, data= beha)
+summary(anovN)
+anovM<-aov(M~treatment, data= beha)
+summary(anovM)
+
+#shapiro for residuals
+shapiro.test(anovS$residuals)
+shapiro.test(anovGR$residuals)
+shapiro.test(anovW$residuals)
+shapiro.test(anovF$residuals)
+shapiro.test(anovPR$residuals)
+shapiro.test(anovN$residuals)
+shapiro.test(anovM$residuals)
+
+#Kruskal Wallis 
+krusS<-kruskal.test(S ~ treatment, data = beha)
+
+print(krusS)
+krusGR<-kruskal.test(GR ~ treatment, data =beha )
+print(krusGR)
+
+krusW<-kruskal.test(W ~ treatment, data = beha)
+print(krusW)
+krusF<-kruskal.test(F ~ treatment, data = beha)
+print(krusF)
+krusPR<-kruskal.test(PR ~ treatment, data = beha)
 
 
+print(krusPR)
+krusN<-kruskal.test(N ~ treatment, data = beha)
+print(krusN)
+krusM<-kruskal.test(M ~ treatment, data = beha)
+print(krusM)
 
