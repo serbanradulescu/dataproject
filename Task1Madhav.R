@@ -7,6 +7,8 @@ library(factoextra)
 library(cluster)
 library(corrplot)
 library(agricolae)
+library(grid)
+library(gridExtra)
 
 ##The behaviour data records the time spent by 7 day old adult hoverflies.
 ##Seven adult behaviours were studied for 10 minutes (600 seconds) and
@@ -179,7 +181,27 @@ AvgM
 Treatments <- c(0, 5, 15, 50, 100, 500)
 WeiBeha <- data.frame(Treatments, AvgWeights, AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM)
 
-barplot(WeiBeha, height = 500, width = 7)
-WB <- ggplot(data=WeiBeha, aes(x=AvgWeights, y=AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM, fill=supp))
+WeiBeha2 <- WeiBeha %>%
+  pivot_longer(!c(Treatments,AvgWeights), names_to = "Behaviour", values_to = "seconds")
 
-geom_bar(stat = "identity")
+WeiBeha2$Treatments <- as.factor(WeiBeha2$Treatments)
+G1 <- ggplot(data=WeiBeha2, aes(x= Treatments, y=seconds, fill = Behaviour)) +
+  geom_bar(stat="identity", position=position_dodge()) 
+
+Text1 <- textGrob("0.327g")
+Text2 <- textGrob("0.324g")
+Text3 <- textGrob("0.324g")
+Text4 <- textGrob("0.327g")
+Text5 <- textGrob("0.319g")
+Text6 <- textGrob("0.312g")
+
+(G2 <- G1 + annotation_custom(grob = Text1,  xmin = 0, xmax = 0, ymin = -50, ymax = -50) +
+    annotation_custom(grob = Text2,  xmin = 5, xmax = 5, ymin = -100, ymax = -100) +
+    annotation_custom(grob = Text3,  xmin = 15, xmax = 15, ymin = -100, ymax = -100)+
+    annotation_custom(grob = Text4,  xmin = 50, xmax = 50, ymin = -100, ymax = -100) +
+    annotation_custom(grob = Text5,  xmin = 100, xmax = 100, ymin = -100, ymax = -100) +
+    annotation_custom(grob = Text6,  xmin = 500, xmax = 500, ymin = -100, ymax = -100))
+
+gg_table <- ggplot_gtable(ggplot_build(G2))
+gg_table$layout$clip[gg_table$layout$name=="panel"] <- "off"
+grid.draw(gg_table)
