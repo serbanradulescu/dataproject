@@ -204,7 +204,7 @@ f1 <- fisher.multcomp(t1)
 knitr::kable(f1$p.value[,1])
 
 ```
-Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05)
+Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05) 
 
 
 ### a2. Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
@@ -257,7 +257,7 @@ ggplot(survival, aes(x=treatment, y=redefdead, fill=exp_round)) +
   geom_bar(stat="identity")
 
 #It is obvious that the treatment500 is different from the others.
-#It is hard to observe if there are differences between blocks, we proced to do a linear model with the blocks as median
+#It is hard to observe if there are differences between blocks, we proced to do a linear model with the blocks as median 
 
 lm1 <- lm(redefdead ~ treatment + exp_round, data= survival)
 #summary(lm1)
