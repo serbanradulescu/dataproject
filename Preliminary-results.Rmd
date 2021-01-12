@@ -195,15 +195,18 @@ t1 <- table(survival$treatment, survival$dead)
 
 #A simple fisher test tells us that there are significant differences between treatments.
 #We proceed with a multi-comparation fisher test.
+```
 
-fisher.multcomp(t1)
+### Multi-comparation fisher test, each treatment compared with the control
 
-#Treatment 500 has significant differences with all of them, between the others there is no significant difference
-
-
-
+```{r 2-effect of treatments on survival, echo=TRUE}
+f1 <- fisher.multcomp(t1)
+knitr::kable(f1$p.value[,1])
 
 ```
+Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05) 
+
+
 ### a2. Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
 
 ```{r effect of treatments on REDEFINED survival, error=FALSE, echo=TRUE}
@@ -254,7 +257,7 @@ ggplot(survival, aes(x=treatment, y=redefdead, fill=exp_round)) +
   geom_bar(stat="identity")
 
 #It is obvious that the treatment500 is different from the others.
-#It is hard to observe if there are differences between blocks, we proced to do a linear model with the blocks as median
+#It is hard to observe if there are differences between blocks, we proced to do a linear model with the blocks as median 
 
 lm1 <- lm(redefdead ~ treatment + exp_round, data= survival)
 #summary(lm1)
@@ -275,11 +278,18 @@ t1 <- table(survival$treatment, survival$redefdead)
 
 #A simple fisher test tells us that there are significant differences between treatments.
 #We proceed with a multi-comparation fisher test.
-
-fisher.multcomp(t1)
-
-#Treatment500 has significant differences with all of them, between them there is no significant difference
 ```
+
+### Multi-comparation fisher test, each treatment compared with the control
+
+```{r 2-effect of treatments on REDEFINED survival, error=FALSE, echo=TRUE}
+f1 <- fisher.multcomp(t1)
+knitr::kable(f1$p.value[,1])
+
+
+```
+Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05)
+
 
 ### a3. A plot that puts survival and pupate in perspective (Kaplan-Meier curves)
 
@@ -358,7 +368,7 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 
 ##### Step 1. Organizing the data. 
 We had to convert our data from the tibble format to a numeric dataframe. 
-```{r}
+```{r, error=FALSE}
 behaviour1 <- beha  ## making a copy of the originaml dataframe
 behaviour1 <- as.data.frame(behaviour1)
 row.names(behaviour1) <- paste(behaviour1$sample,
@@ -372,7 +382,7 @@ colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
 ##### Step 2.Analysis
 
 We ran the prcomp command to run a PCA on our dataframe. 
-```{r}
+```{r, error=FALSE}
 pca1 <- prcomp(b1, scale = TRUE)
 
 ##Eigen values
@@ -385,7 +395,7 @@ From the Eigen values and the Scree plot of our PCA we understand that Principal
 
 Heat mapping:
 The heat map explains shows which behaviour is best explained by which Principal Component.
-```{r}
+```{r, error=FALSE}
 
 
 var <- get_pca_var(pca1)
@@ -399,7 +409,7 @@ autoplot(var$cor, main = "Heat map")
 From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
 correlation circle:
-```{r}
+```{r, error=FALSE,warning=FALSE}
 fviz_pca_var(pca1, col.var = "black")
 ```
 
@@ -407,7 +417,7 @@ This plot of the correlation circle visualizes the correlation between the first
 grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours.
 
 Individuals PCA
-```{r}
+```{r, error=FALSE,warning=FALSE}
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 ```
 
@@ -417,7 +427,7 @@ From this plot we can conclude that there is no significant difference between t
 
 
 Weight
-```{r, echo=FALSE}
+```{r, error=FALSE,warning=FALSE, echo=FALSE}
 lavalweight <- weig
 View(lavalweight)
 

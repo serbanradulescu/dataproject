@@ -22,6 +22,8 @@ library(stringr)
 library(tidyverse)
 source("01_import-data.R")
 
+#for the package RVAideMemoire, use the  install_github("mixOmicsTeam/mixOmics") command before
+
 #For the mortality rate (survival$dead)
 #Step 1: We plot it in order to see if:
 #-there are differences between the blocks
@@ -38,7 +40,12 @@ ggplot(survival, aes(x=treatment, y=dead, fill=exp_round)) +
 #It is hard to observe if there are differences between blocks, we proced to do a linear model with the blocks as median
 
 lm1 <- lm(dead ~ treatment + exp_round, data= survival)
-summary(lm1)
+
+lms <- summary(lm1)
+lms <- as.data.frame(lms$coefficients)
+lms$`Pr(>|t|)`[which(row.names(lms)== 'treatment500')]
+
+
 
 #P value is smaller than 0.05 for: treatment500. The other treatments and the blocks show a p_value smaller than 0.5 so no significant effect.
 #We proceed to study the interaction betwenn treatments and blocks.
@@ -57,7 +64,27 @@ fisher.test(t1, simulate.p.value=TRUE)
 #A simple fisher test tells us that there are significant differences between treatments.
 #We proceed with a multi-comparation fisher test.
 
-fisher.multcomp(t1)
+tab <- fisher.multcomp(t1)
+
+let <- character()
+let[1] <- ' '
+
+for(i in 1:length(tab$p.value[,1])) {
+  let[i+1] <- if(tab$p.value[i,1] > 0.01) 
+                  {let[i+1] <- ' '} 
+               else {let[i+1] <- '*'}}
+
+surs <- data.frame(let=let, treatment=levels(survival$treatment))
+ggplot() + 
+  geom_bar(data=survival, aes(x=treatment, y=dead, fill=exp_round),stat="identity") +
+  geom_text(data=surs, 
+    aes(label = let,x=1:6, y = 33.5),
+    # position = position_dodge(0.9),
+    vjust = 0
+  )
+#Put a legend
+
+
 
 #Treatment 500 has significant differences with all of them, between the others there is no significant difference
 
@@ -158,6 +185,8 @@ fisher.test(t1, simulate.p.value=TRUE)
 fisher.multcomp(t1)
 
 #Treatment500 has significant differences with all of them, between them there is no significant difference
+
+
 
 
 #Part 2 - Analysis on time to pupate on the original defined survival, as for the redefined we weren't able to identify the individuals

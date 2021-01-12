@@ -6,6 +6,7 @@ library(ggfortify)
 library(factoextra)
 library(cluster)
 library(corrplot)
+library(agricolae)
 
 ##The behaviour data records the time spent by 7 day old adult hoverflies.
 ##Seven adult behaviours were studied for 10 minutes (600 seconds) and
@@ -96,30 +97,89 @@ shapiro.test(beh.aovN$residuals)
 shapiro.test(beh.aovM$residuals)
 
 ##From the p values of the Shapiro Wilk statistic we can conclude that 
-##not of the behaviours follow a normal distribution. 
+##none of the behaviours follow a normal distribution. 
 
 ##Kruskal Wallis test
-krusS <- kruskal(b2$S, trt = b2$treatment, alpha = 0.01)
+krusS <- kruskal(b2$S, trt = b2$treatment, alpha = 0.05)
 print(krusS)
-krusGR <- kruskal(b2$GR, trt = b2$treatment, alpha = 0.01)
+krusGR <- kruskal(b2$GR, trt = b2$treatment, alpha = 0.05)
 print(krusGR)
-krusW <- kruskal(b2$W, trt = b2$treatment, alpha = 0.01)
+krusW <- kruskal(b2$W, trt = b2$treatment, alpha = 0.05)
 print(krusW)
-krusF <- kruskal(b2$F, trt = b2$treatment, alpha = 0.01)
+krusF <- kruskal(b2$F, trt = b2$treatment, alpha = 0.05)
 print(krusF)
-krusPR <- kruskal(b2$PR, trt = b2$treatment, alpha = 0.01)
+krusPR <- kruskal(b2$PR, trt = b2$treatment, alpha = 0.05)
 print(krusPR)
-krusN <- kruskal(b2$N, trt = b2$treatment, alpha = 0.01)
+krusN <- kruskal(b2$N, trt = b2$treatment, alpha = 0.05)
 print(krusN)
-krusM <- kruskal(b2$M, trt = b2$treatment, alpha = 0.01)
+krusM <- kruskal(b2$M, trt = b2$treatment, alpha = 0.05)
 print(krusM)
 
 ### Comparing the effect of weight on behaviour
-Weight1 <- filter(weig, FIL == 0)
-a <- as.numeric()
+Weight1 <- filter(weig, FIL == 0, Time == 4)
+AvgWeights <- as.numeric()
 for(i in levels(as.factor(Weight1$Treatment))){
-   a <-c(a,mean(Weight1$weight[which(Weight1$Treatment == i)]))
+   AvgWeights <-c(AvgWeights,mean(Weight1$weight[which(Weight1$Treatment == i)]))
 }
-a
-M <- filter(Weight1, Treatment == 15)
+AvgWeights
+
+M <- filter(Weight1, Treatment == 15, Time == 4)
 mean(M$weight)
+##Calculating the average time spent by adults of each treatment group
+##For each behavious
+
+##Avg S
+AvgS <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgS <- c(AvgS, mean(behaviour1$S[which(behaviour1$treatment == i)]))
+}
+AvgS
+
+##Avg GR
+AvgGR <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgGR <- c(AvgGR, mean(behaviour1$GR[which(behaviour1$treatment == i)]))
+}
+AvgGR
+
+##Avg W
+AvgW <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgW <- c(AvgW, mean(behaviour1$W[which(behaviour1$treatment == i)]))
+}
+AvgW
+
+##Avg F
+AvgF <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgF <- c(AvgF, mean(behaviour1$F[which(behaviour1$treatment == i)]))
+}
+AvgF
+
+##Avg PR
+AvgPR <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgPR <- c(AvgPR, mean(behaviour1$PR[which(behaviour1$treatment == i)]))
+}
+AvgPR
+
+##Avg N
+AvgN <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgN <- c(AvgN, mean(behaviour1$N[which(behaviour1$treatment == i)]))
+}
+AvgN
+
+##Avg M
+AvgM <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgM <- c(AvgM, mean(behaviour1$M[which(behaviour1$treatment == i)]))
+}
+AvgM
+Treatments <- c(0, 5, 15, 50, 100, 500)
+WeiBeha <- data.frame(Treatments, AvgWeights, AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM)
+
+barplot(WeiBeha, height = 500, width = 7)
+WB <- ggplot(data=WeiBeha, aes(x=AvgWeights, y=AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM, fill=supp))
+
+geom_bar(stat = "identity")
