@@ -43,6 +43,7 @@ for(i in 1:nrow(Fordifference)){
 
 ###Change the weight to final weight to differentiate between initial and final weight
 colnames(Fordifference)[colnames(Fordifference) == "weight"] <- "Finalweight"
+colnames(Fordifference)[colnames(Fordifference) == "Rep"] <- "RepID"
 
 ##Create another column for difference between final and initial weight
 Fordifference$Difference <- (Fordifference$Finalweight - Fordifference$Initialweight)
@@ -51,7 +52,7 @@ Fordifference$Difference <- (Fordifference$Finalweight - Fordifference$Initialwe
 Fordifference <-  select(Fordifference, -Time)
 
 ##Arrange the column of the data.frame in the order below
-Fordifference <- Fordifference[c("Rep", "Treatment", "FIL", "Initialweight", 
+Fordifference <- Fordifference[c("RepID", "Treatment", "FIL", "Initialweight", 
                                  "Finalweight", "Difference")]
 
 ##Check the structure of newly created dataframes
@@ -100,30 +101,28 @@ print(kruz)
 
 ##Make a plot for visual representation of the analysis and comparison between treatments and control
 my_comparisons <- list(c("0", "5"), c("0", "15"),c("0", "50"),c("0", "100"),
-                       c("0", "500"), c("5", "15"),c("5", "50"),c("5", "100"),
-                       c("5", "500"),c("15", "50"),c("15", "100"), c("15", "500"),
-                       c("50", "100"), c("50", "500"), c("100", "500"))
+                       c("0", "500"))
 Fordifference %>%
   ggplot(aes(x = Treatment, group = Treatment, y = Difference, color = Treatment)) +
-  geom_boxplot() +
+  geom_violin(trim = F, width = 0.65, draw_quantiles = c(0.25, 0.5, 0.75)) +
   theme_classic()+
-  scale_y_continuous(limits = c(0.15, 0.75)) +
+  scale_y_continuous(limits = c(0.15, 0.70)) +
   xlab("Treatment") + 
   ylab("Weight")+
+  ggtitle("Comparison of treatment effect on larval weight")+
   stat_compare_means(method = "kruskal.test")+
-  stat_compare_means(comparisons = my_comparisons,label.y = c(0.38,0.40,0.42,
-                                                              0.44,0.46,0.48,
-                                                              0.50,0.52,0.55,
-                                                              0.58,0.61,0.64,
-                                                              0.67,0.70,0.73))+
-  stat_compare_means(label.y = 75)
+  stat_compare_means(comparisons = my_comparisons,label.y = c(0.43,0.46,0.49,
+                                                              0.52,0.55))+
+  stat_compare_means(label.y = 70)
   
 
 
  ###Fisher's test
-fil <- table(Fordifference$FIL, Fordifference$Treatment)
-fil
-fisher.test(fil)
+##Hypothesis : H0 :  the treatment has no effect on FIL
+              #H1 :  the treatment has effect on FIL
+fisher.test(Fordifference$FIL, Fordifference$Treatment)
+
+
 
  #p-value 0.3198 is greater than 0.05, therefore, 
 ##there is no sufficient evidence to accept the alternative hypothesis
