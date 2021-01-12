@@ -97,6 +97,7 @@ shapiro.test(anovM$residuals)
 
 #Kruskal Wallis 
 krusS<-kruskal(beha$S, trt = beha$treatment, alpha= 0.01)
+
 print(krusS)
 krusGR<-kruskal(beha$GR, trt= beha$treatment, alpha = 0.01)
 print(krusGR)
@@ -110,4 +111,14 @@ krusN<-kruskal(beha$N, trt= beha$treatment, alpha= 0.01)
 print(krusN)
 krusM<-kruskal(beha$M , trt =  beha$treatment, alpha= 0.01)
 print(krusM)
+
+#The effect of weight on behaviour 
+behawei<-weig
+Weight1 <- filter(weig, FIL == 0)
+
+
+
+
+
+
 
