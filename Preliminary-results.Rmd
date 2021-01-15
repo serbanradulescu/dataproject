@@ -22,6 +22,8 @@ library(ggfortify)
 library(factoextra)
 library(cluster)
 library(corrplot)
+library(ggpubr)
+library(rstatix)
 library(RVAideMemoire)  #if you have problems with this package, please check devtools and install_github("mixOmicsTeam/mixOmics")
 library(car)
 
@@ -551,22 +553,17 @@ G1 + scale_x_discrete(labels=c("0" = "0 (0.327g)", "5" = "5 (0.324g)",
 ```
 
 
-
-```{r, error=FALSE,warning=FALSE, echo=FALSE}
+## C.: Weight Analysis
+```{r, error=FALSE, echo=FALSE}
 lavalweight <- weig
 View(lavalweight)
 
-### Make new data.frames from lavalweight for the initial and final time (1 & 4)
-#for optimum analysis
+# Make new data.frames from lavalweight for the initial and final time (1&4) for optimum analysis
 
 Initialwgt <- filter(lavalweight, Time == 1)
 Finalwgt <- filter(lavalweight, Time == 4)
 
-###Find the difference between the final and initial weight. There is a difference
-## in the number of row between the newly created data.frames, because some lavae
-#escaped before the final weight and some immediately after the first weight, so 
-#there is a need to get those reps that have both the final and the initial weight 
-#to get the difference in weight.
+#Find the difference between the final and initial weight. There is a difference in the number of row between the newly created data.frames, because some lavae escaped before the final weight and some immediately after the first weight, so there is a need to get those reps that have both the final and the initial weight to get the difference in weight.
 
 Fordifference <- filter(lavalweight, Time == 4)
 
@@ -580,8 +577,10 @@ for(i in 1:nrow(Fordifference)){
     Fordifference$Initialweight[i] <- Initialwgt$weight[j]
   }}}
 
-###Change the weight to final weight to differentiate between initial and final weight
-colnames(Fordifference)[colnames(Fordifference) == "weight"] <- "Finalweight"
+#Change the column names in the data.frame: weight to final weight to differentiate between initial and final weight.
+
+colnames(Fordifference)[colnames(Fordifference) == "weight"] <-"Finalweight"
+colnames(Fordifference)[colnames(Fordifference) == "Rep"] <- "RepID"
 
 ##Create another column for difference between final and initial weight
 Fordifference$Difference <- (Fordifference$Finalweight - Fordifference$Initialweight)
@@ -590,72 +589,64 @@ Fordifference$Difference <- (Fordifference$Finalweight - Fordifference$Initialwe
 Fordifference <-  select(Fordifference, -Time)
 
 ##Arrange the column of the data.frame in the order below
-Fordifference <- Fordifference[c("Rep", "Treatment", "FIL", "Initialweight", 
-                                 "Finalweight", "Difference")]
+Fordifference <- Fordifference[c("RepID", "Treatment", "FIL", "Initialweight", "Finalweight", "Difference")]
 
-##Check the structure of newly created dataframes
-str(Fordifference)
-
-## The treatment, FIL and Time were integer, so i needed to convert them to a 
-##factor for easier manipulation.
+## The treatment, FIL and Time were integer, so i needed to convert them to a factor for easier manipulation.
 Fordifference$Treatment <- as.factor(Fordifference$Treatment)
 Fordifference$FIL <- as.factor(Fordifference$FIL)
 
-str(Fordifference)
 
-#One-way ANOVA to determine the effect of thiamethoxam on weight
+```
+
+### c1: Test for normality using the Shapiro–Wilk statistic to determine the normality of the difference in weigth
+```{r Test for normality using the Shapiro–Wilk statistic to determine the normality of the difference in weigth, echo=TRUE}
+
+ggdensity(Fordifference$Difference, fill = "lightgray", title = "Visual judgement of the distribution shape of the weight difference")
+
+Fordifference %>% shapiro_test(Difference)
+ggqqplot(Fordifference$Difference, title = "Q-Q plot")
+
+```
+
+### c2: P.Value for Shapiro.test after the ANOVA
+```{r echo=TRUE}
 res.aov<- aov(Difference ~ Treatment, data = Fordifference)
-summary(res.aov)
 
-#Test for normality using the Shapiro–Wilk statistic.Making a Q-Q plot  
-##This can only be done after ANOVA
-
-shapiro.test(res.aov$residuals)
+rs <- shapiro.test(res.aov$residuals)
+print (rs[["p.value"]])
 qqnorm(res.aov$residuals)
 qqline(res.aov$residuals)
 
-## Based on the shapiro.test, we can conclude that the distribution of the treatment
-## effect was significantly different from normal distribution
+## Based on the shapiro.test, we can conclude that the distribution of weight diverge from normal distribution. There is need to use another statistical test which can perfectly analyze a not normal distributed data.
 
-
-##LeveneTest for equality of Variance
-#Hypothesis
-#H0: The variance for all groups are equal
-#H1: At least one variance is not equal
-
-
-leveneTest(Difference ~ Treatment, data = Fordifference)
-
-#Based on the LeveneTest, the variance for all the groups are equal
-
-
-#Kruskal Wallis to determine the effect of thiamethoxam on pupal weight
-
-kruz <- kruskal(Fordifference$Difference, trt = Fordifference$Treatment)
-print(kruz)
-
-##Based on the Kruskal Wallis test, there is no significant difference between 
-## treatments
-
-##Make a plot for visual representation of the analysis
-Fordifference %>%
-  ggplot(aes(x = Treatment, group = Treatment, y = Difference, fill = Treatment)) +
-  geom_violin(trim = FALSE) + 
-  geom_boxplot(width = 0.2) +
-  scale_y_continuous(limits = c(0.15, 0.50)) +
-  theme_gray() +
-  xlab("Treatment") + 
-  ylab("Weight")
-  
-
- ###Fisher's test
-fil <- table(Fordifference$FIL, Fordifference$Treatment)
-fil
-fisher.test(fil)
-
- #p-value 0.3198 is greater than 0.05, therefore, 
-##there is no sufficient evidence to accept the alternative hypothesis
 ```
+
+
+### c3: Kruskal-Wallis  analysis and Visual representation of the analysis
+```{r echo=TRUE}
+kruz <- kruskal(Fordifference$Difference, trt = Fordifference$Treatment)
+
+##Based on the Kruskal Wallis test, there is no significant difference between treatments
+
+##Make a plot for visual representation of the analysis and comparison between treatments and control
+my_comparisons <- list(c("0", "5"), c("0", "15"),c("0", "50"),c("0", "100"),
+                       c("0", "500"))
+
+
+Fordifference %>%
+  ggplot(aes(x = Treatment, group = Treatment, y = Difference, color = Treatment)) +
+  geom_violin(trim = F, width = 0.65, draw_quantiles = c(0.25, 0.5, 0.75)) +
+  theme_classic()+
+  scale_y_continuous(limits = c(0.15, 0.70)) +
+  xlab("Treatment") + 
+  ylab("Weight")+
+  ggtitle("Comparison of treatment effect on larval weight")+
+  stat_compare_means(method = "kruskal.test")+
+  stat_compare_means(comparisons = my_comparisons,label.y = c(0.43,0.46,0.49,0.52,0.55))+
+  stat_compare_means(label.y = 70)
+
+```
+
 
 ## 7. Discussion. From your objectives.
 Are to be done for the final presentation.
