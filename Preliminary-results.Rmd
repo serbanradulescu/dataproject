@@ -22,7 +22,7 @@ library(ggfortify)
 library(factoextra)
 library(cluster)
 library(corrplot)
-library(RVAideMemoire)
+library(RVAideMemoire)  #if you have problems with this package, please check devtools and install_github("mixOmicsTeam/mixOmics")
 library(car)
 
 
@@ -161,7 +161,7 @@ we sourced our data from the PeerJ article mentioned above. We did Principal Com
 ### a1. Effect of treatments on survival (multi-comp Fisher Test): 
 #### treatment500 has significant differences with all of them, between the others there is no significant difference
 
-```{r effect of treatments on survival, echo=TRUE}
+```{r effect of treatments on survival, fig.cap = "Figure 1: Plot to see the differences between blocks and treatments", echo=TRUE}
 #Step 1: We plot it in order to see if:
 #-there are differences between the blocks
 #-there are differences between the treatments
@@ -201,7 +201,7 @@ t1 <- table(survival$treatment, survival$dead)
 
 ```{r 2-effect of treatments on survival, echo=TRUE}
 f1 <- fisher.multcomp(t1)
-knitr::kable(f1$p.value[,1])
+knitr::kable(f1$p.value[,1], caption = "Table that shows pvalue for the mumti-fisher test, each treatment being comaperd with control")
 
 ```
 Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05) 
@@ -209,7 +209,7 @@ Treatment 500 has significant differences with the control, others show no signi
 
 ### a2. Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
 
-```{r effect of treatments on REDEFINED survival, error=FALSE, echo=TRUE}
+```{r effect of treatments on REDEFINED survival,fig.cap = "Figure 2: Plot to see the differences between blocks and treatments on REDEFINED survival", error=FALSE, echo=TRUE}
 #Redefine survival and redo the analyses
 
 #Step 1:  Redefine dead
@@ -284,7 +284,7 @@ t1 <- table(survival$treatment, survival$redefdead)
 
 ```{r 2-effect of treatments on REDEFINED survival, error=FALSE, echo=TRUE}
 f1 <- fisher.multcomp(t1)
-knitr::kable(f1$p.value[,1])
+knitr::kable(f1$p.value[,1],cap = "This table shows the multi-comparation fisher test, each treatment compared with the control for REDEFINES survival")
 
 
 ```
@@ -293,7 +293,7 @@ Treatment 500 has significant differences with the control, others show no signi
 
 ### a3. A plot that puts survival and pupate in perspective (Kaplan-Meier curves)
 
-```{r Kaplan-Meier curves, error=FALSE, echo=TRUE}
+```{r Kaplan-Meier curves, fig.cap = "Figure  Kaplan-Meier curves for survival" , error=FALSE, echo=TRUE}
 
 
 
@@ -315,9 +315,9 @@ ggsurvplot(fit1, data = survival, pval = TRUE)
 
 
 
-### b. Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
+### a4. Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
 
-```{r Effect of treatments on time to pupate (ANOVA), error=FALSE, echo=TRUE}
+```{r Effect of treatments on time to pupate (ANOVA), fig.cap="Figure  Kaplan-Meier curves for time to pupate", error=FALSE, echo=TRUE}
 
 #Part 2 - Analysis on time to pupate on the original defined survival, as for the redefined we weren't able to identify the individuals
 
@@ -351,6 +351,9 @@ lm1 <- lm(timetopup ~ treatment + exp_round +
 
 anv <- aov( lm(survival$timetopup ~ survival$treatment) )
 #summary(anv)
+```
+
+```{r HSD Test for weight, fig.cap="Figure  HSD test to see the effect of treatment on weight", error=FALSE, echo=TRUE}
 
 #Anova shows significant differences between treatments. We proceed with a HSD test.
 
@@ -363,7 +366,7 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 
 ```
 
-### c. Effects of treatments on behaviour
+### b. Effects of treatments on behaviour
 
 
 ##### Step 1. Organizing the data. 
@@ -382,7 +385,7 @@ colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
 ##### Step 2.Analysis
 
 We ran the prcomp command to run a PCA on our dataframe. 
-```{r, error=FALSE}
+```{r, fig.cap = "Figure x: From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.", error=FALSE}
 pca1 <- prcomp(b1, scale = TRUE)
 
 ##Eigen values
@@ -391,11 +394,11 @@ eig.val <- get_eigenvalue(pca1)
 ##Scree plot
 fviz_eig(pca1, addlabels = TRUE)
 ```
-From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.
 
-Heat mapping:
-The heat map explains shows which behaviour is best explained by which Principal Component.
-```{r, error=FALSE}
+
+### Heat mapping:
+##### The heat map explains shows which behaviour is best explained by which Principal Component.
+```{r, fig.cap = "Figure x Heat map for behaviour (A heat map is data analysis software that uses color the way a bar graph uses height and width: as a data visualization tool.)", error=FALSE}
 
 
 var <- get_pca_var(pca1)
@@ -409,24 +412,23 @@ autoplot(var$cor, main = "Heat map")
 From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
 correlation circle:
-```{r, error=FALSE,warning=FALSE}
+```{r, fig.cap = "Figure x: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. ", error=FALSE,warning=FALSE}
 fviz_pca_var(pca1, col.var = "black")
 ```
 
-This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and 
-grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours.
+
 
 Individuals PCA
-```{r, error=FALSE,warning=FALSE}
+
+```{r, fig.cap = "Figure x: This plot with ellipses shows the distribution of each behaviour following each treatment. From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap", error=FALSE,warning=FALSE}
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 ```
 
-This plot with ellipses shows the distribution of each behaviour following each treatment
-From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap
 
 
 
-Weight
+
+### c.Effect of treatment on weight
 ```{r, error=FALSE,warning=FALSE, echo=FALSE}
 lavalweight <- weig
 View(lavalweight)
@@ -530,7 +532,6 @@ fisher.test(fil)
 
  #p-value 0.3198 is greater than 0.05, therefore, 
 ##there is no sufficient evidence to accept the alternative hypothesis
-
 ```
 
 ## 7. Discussion. From your objectives.
