@@ -186,22 +186,8 @@ WeiBeha2 <- WeiBeha %>%
 
 WeiBeha2$Treatments <- as.factor(WeiBeha2$Treatments)
 G1 <- ggplot(data=WeiBeha2, aes(x= Treatments, y=seconds, fill = Behaviour)) +
-  geom_bar(stat="identity", position=position_dodge()) 
+  geom_bar(stat="identity", position=position_dodge())
 
-Text1 <- textGrob("0.327g")
-Text2 <- textGrob("0.324g")
-Text3 <- textGrob("0.324g")
-Text4 <- textGrob("0.327g")
-Text5 <- textGrob("0.319g")
-Text6 <- textGrob("0.312g")
-
-(G2 <- G1 + annotation_custom(grob = Text1,  xmin = 0, xmax = 0, ymin = -50, ymax = -50) +
-    annotation_custom(grob = Text2,  xmin = 5, xmax = 5, ymin = -100, ymax = -100) +
-    annotation_custom(grob = Text3,  xmin = 15, xmax = 15, ymin = -100, ymax = -100)+
-    annotation_custom(grob = Text4,  xmin = 50, xmax = 50, ymin = -100, ymax = -100) +
-    annotation_custom(grob = Text5,  xmin = 100, xmax = 100, ymin = -100, ymax = -100) +
-    annotation_custom(grob = Text6,  xmin = 500, xmax = 500, ymin = -100, ymax = -100))
-
-gg_table <- ggplot_gtable(ggplot_build(G2))
-gg_table$layout$clip[gg_table$layout$name=="panel"] <- "off"
-grid.draw(gg_table)
+G1 + scale_x_discrete(labels=c("0" = "0 (0.327g)", "5" = "5 (0.324g)",
+                              "15" = "15 (0.324g)", "50" = "50 (0.327g)",
+                              "100" = "100 (0.319g)", "500" = "500 (0.312g)"))
