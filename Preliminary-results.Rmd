@@ -369,7 +369,7 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 ### b. Effects of treatments on behaviour
 
 
-##### b1. Organizing the data. 
+#### b1. Organizing the data. 
 We had to convert our data from the tibble format to a numeric dataframe. 
 ```{r, error=FALSE}
 behaviour1 <- beha  ## making a copy of the originaml dataframe
@@ -382,7 +382,7 @@ colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
 
 ```
 
-##### b2. Principal Component Analysis
+#### b2. Principal Component Analysis
 
 We ran the prcomp command to run a PCA on our dataframe. 
 ```{r, fig.cap = "Figure x: From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.", error=FALSE}
@@ -396,8 +396,8 @@ fviz_eig(pca1, addlabels = TRUE)
 ```
 
 
-### Heat mapping:
-##### The heat map explains shows which behaviour is best explained by which Principal Component.
+##### Heat mapping
+###### The heat map explains shows which behaviour is best explained by which Principal Component.
 ```{r, fig.cap = "Figure x Heat map for behaviour (A heat map is data analysis software that uses color the way a bar graph uses height and width: as a data visualization tool.)", error=FALSE}
 
 
@@ -407,20 +407,20 @@ autoplot(var$cor, main = "Heat map")
 ```
 From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
-### correlation circle:
+##### Correlation circle
 ```{r, fig.cap = "Figure x: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. ", error=FALSE,warning=FALSE}
 fviz_pca_var(pca1, col.var = "black")
 ```
 
 
 
-Individuals PCA
+##### Individuals PCA
 
 ```{r, fig.cap = "Figure x: This plot with ellipses shows the distribution of each behaviour following each treatment. From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap", error=FALSE,warning=FALSE}
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 ```
 
-### b3. Anova, Shapiro Wilk, and Kruskal Wallis to study the effect of treatment on behaviour
+#### b3. Shapiro Wilk, and Kruskal Wallis to study the effect of treatment on behaviour
 
 ```{r}
 beh.aovS <- aov(S ~ treatment, data = b2)
@@ -433,48 +433,58 @@ beh.aovM <- aov(M ~ treatment, data = b2)
 ```
 
 
-Test for normality using Shapiro Wilk test
+##### Test for normality using Shapiro Wilk test
 
+###### The p values for stationary, grooming, waiting, flying, probing, feeding, mating respectively.
 ```{r}
-shapiro.test(beh.aovS$residuals)
-shapiro.test(beh.aovGR$residuals)
-shapiro.test(beh.aovW$residuals)
-shapiro.test(beh.aovF$residuals)
-shapiro.test(beh.aovPR$residuals)
-shapiro.test(beh.aovN$residuals)
-shapiro.test(beh.aovM$residuals)
+SS <- shapiro.test(beh.aovS$residuals)
+print(SS[["p.value"]])
+SGR <- shapiro.test(beh.aovGR$residuals)
+print(SGR[["p.value"]])
+SW <- shapiro.test(beh.aovW$residuals)
+print(SW[["p.value"]])
+SF <- shapiro.test(beh.aovF$residuals)
+print(SF[["p.value"]])
+SPR <- shapiro.test(beh.aovPR$residuals)
+print(SPR[["p.value"]])
+SN <- shapiro.test(beh.aovN$residuals)
+print(SN[["p.value"]])
+SM <- shapiro.test(beh.aovM$residuals)
+print(SM[["p.value"]])
 ```
 
-Distribution is not normal.
-Kruskal Wallis test
+###### Distribution is not normal.
+
+##### Kruskal Wallis test
 
 ```{r}
 krusS <- kruskal(b2$S, trt = b2$treatment, alpha = 0.05)
-print(krusS)
+print(krusS[["groups"]])
 krusGR <- kruskal(b2$GR, trt = b2$treatment, alpha = 0.05)
-print(krusGR)
+print(krusGR[["groups"]])
 krusW <- kruskal(b2$W, trt = b2$treatment, alpha = 0.05)
-print(krusW)
+print(krusW[["groups"]])
 krusF <- kruskal(b2$F, trt = b2$treatment, alpha = 0.05)
-print(krusF)
+print(krusF[["groups"]])
 krusPR <- kruskal(b2$PR, trt = b2$treatment, alpha = 0.05)
-print(krusPR)
+print(krusPR[["groups"]])
 krusN <- kruskal(b2$N, trt = b2$treatment, alpha = 0.05)
-print(krusN)
+print(krusN[["groups"]])
 krusM <- kruskal(b2$M, trt = b2$treatment, alpha = 0.05)
-print(krusM)
+print(krusM[["groups"]])
+
 ```
 
-From the Kruskal Waliis test we can see that
-1. For Waiting, Flying, Pruning behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
-In the rest of the behaviours, the time  spent in each behaviour was different but there is no pattern in their classification. For example, in Mating behaviour, the control adults and the adults exposed to 500 ppb of thiamethoxam are grouped together.
+###### From the Kruskal Waliis test we can see that
+###### 1. For Waiting, Flying, Probing behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
+###### In the rest of the behaviours, the time  spent in each behaviour was different but there is no pattern in their classification. For example, in Mating behaviour, the control adults and the adults exposed to 500 ppb of thiamethoxam are grouped together.
 
-### b4. Comparing the effect of weight on behaviour
+#### b4. Comparing the effect of weight on behaviour
 
-It was not possible to identify the same individuals in both the weight and behaviour dataset. So we took the average weight for each treatment and the average time spent by each treatment group for each behaviour. Note that the average weight for each behaviour is similar. We combined this data into a single dataframe and made a barplot to visualize the result.
+###### It was not possible to identify the same individuals in both the weight and behaviour dataset. So we took the average weight for each treatment and the average time spent by each treatment group for each behaviour. Note that the average weight for each behaviour is similar. We combined this data into a single dataframe and made a barplot to visualize the result.
 
-However, this comparison is not perfect. There was weight data for 145 individuals from which we got our average weights. However only 117 individuals were observed for behaviour.
-It is possible that some of the larva that formed pupa did not emerge as adult hoverflies and so their behaviour was not recorded.
+###### However, this comparison is not perfect. There was weight data for 145 individuals from which we got our average weights. However only 117 individuals were observed for behaviour.
+###### It is possible that some of the larva that formed pupa did not emerge as adult hoverflies and so their behaviour was not recorded.
 
 ```{r}
 Weight1 <- filter(weig, FIL == 0, Time == 4)
@@ -536,7 +546,7 @@ for(i in levels(as.factor(behaviour1$treatment))){
 
 Treatments <- c(0, 5, 15, 50, 100, 500)
 WeiBeha <- data.frame(Treatments, AvgWeights, AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM)
-
+knitr::kable(WeiBeha, format = "simple", caption = "Average time spent for each behaviour  for different treatments and corresponding  weights")
 
 WeiBeha2 <- WeiBeha %>%
   pivot_longer(!c(Treatments,AvgWeights), names_to = "Behaviour", values_to = "seconds")
@@ -599,14 +609,6 @@ Fordifference$FIL <- as.factor(Fordifference$FIL)
 ```
 
 ### c1: Test for normality using the Shapiro–Wilk statistic to determine the normality of the difference in weigth
-```{r Test for normality using the Shapiro–Wilk statistic to determine the normality of the difference in weigth, echo=TRUE}
-
-ggdensity(Fordifference$Difference, fill = "lightgray", title = "Visual judgement of the distribution shape of the weight difference")
-
-Fordifference %>% shapiro_test(Difference)
-ggqqplot(Fordifference$Difference, title = "Q-Q plot")
-
-```
 
 ### c2: P.Value for Shapiro.test after the ANOVA
 ```{r echo=TRUE}
