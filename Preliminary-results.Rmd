@@ -25,8 +25,6 @@ library(corrplot)
 library(RVAideMemoire)  #if you have problems with this package, please check devtools and install_github("mixOmicsTeam/mixOmics")
 library(car)
 
-
-
 ```
 ![The studied insects and substance](data/collage1.png)
 ![The studied insects: hoverfly Eristalis tenax adult and larva](data/collage 2.png)
@@ -369,7 +367,7 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 ### b. Effects of treatments on behaviour
 
 
-##### Step 1. Organizing the data. 
+##### b1. Organizing the data. 
 We had to convert our data from the tibble format to a numeric dataframe. 
 ```{r, error=FALSE}
 behaviour1 <- beha  ## making a copy of the originaml dataframe
@@ -382,7 +380,7 @@ colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
 
 ```
 
-##### Step 2.Analysis
+##### b2. Principal Component Analysis
 
 We ran the prcomp command to run a PCA on our dataframe. 
 ```{r, fig.cap = "Figure x: From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.", error=FALSE}
@@ -402,16 +400,12 @@ fviz_eig(pca1, addlabels = TRUE)
 
 
 var <- get_pca_var(pca1)
-var
-head(var$coord)
-head(var$cos2)
-head(var$contrib)
 
 autoplot(var$cor, main = "Heat map")
 ```
 From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
-correlation circle:
+### correlation circle:
 ```{r, fig.cap = "Figure x: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. ", error=FALSE,warning=FALSE}
 fviz_pca_var(pca1, col.var = "black")
 ```
@@ -424,11 +418,140 @@ Individuals PCA
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 ```
 
+### b3. Anova, Shapiro Wilk, and Kruskal Wallis to study the effect of treatment on behaviour
+
+```{r}
+beh.aovS <- aov(S ~ treatment, data = b2)
+beh.aovGR<- aov(GR ~ treatment, data = b2)
+beh.aovW <- aov(W ~ treatment, data = b2)
+beh.aovF <- aov(F ~ treatment, data = b2)
+beh.aovPR <- aov(PR ~ treatment, data = b2)
+beh.aovN <- aov(N ~ treatment, data = b2)
+beh.aovM <- aov(M ~ treatment, data = b2)
+```
+
+
+Test for normality using Shapiro Wilk test
+
+```{r}
+shapiro.test(beh.aovS$residuals)
+shapiro.test(beh.aovGR$residuals)
+shapiro.test(beh.aovW$residuals)
+shapiro.test(beh.aovF$residuals)
+shapiro.test(beh.aovPR$residuals)
+shapiro.test(beh.aovN$residuals)
+shapiro.test(beh.aovM$residuals)
+```
+
+Distribution is not normal.
+Kruskal Wallis test
+
+```{r}
+krusS <- kruskal(b2$S, trt = b2$treatment, alpha = 0.05)
+print(krusS)
+krusGR <- kruskal(b2$GR, trt = b2$treatment, alpha = 0.05)
+print(krusGR)
+krusW <- kruskal(b2$W, trt = b2$treatment, alpha = 0.05)
+print(krusW)
+krusF <- kruskal(b2$F, trt = b2$treatment, alpha = 0.05)
+print(krusF)
+krusPR <- kruskal(b2$PR, trt = b2$treatment, alpha = 0.05)
+print(krusPR)
+krusN <- kruskal(b2$N, trt = b2$treatment, alpha = 0.05)
+print(krusN)
+krusM <- kruskal(b2$M, trt = b2$treatment, alpha = 0.05)
+print(krusM)
+```
+
+From the Kruskal Waliis test we can see that
+1. For Waiting, Flying, Pruning behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
+In the rest of the behaviours, the time  spent in each behaviour was different but there is no pattern in their classification. For example, in Mating behaviour, the control adults and the adults exposed to 500 ppb of thiamethoxam are grouped together.
+
+### b4. Comparing the effect of weight on behaviour
+
+It was not possible to identify the same individuals in both the weight and behaviour dataset. So we took the average weight for each treatment and the average time spent by each treatment group for each behaviour. Note that the average weight for each behaviour is similar. We combined this data into a single dataframe and made a barplot to visualize the result.
+
+However, this comparison is not perfect. There was weight data for 145 individuals from which we got our average weights. However only 117 individuals were observed for behaviour.
+It is possible that some of the larva that formed pupa did not emerge as adult hoverflies and so their behaviour was not recorded.
+
+```{r}
+Weight1 <- filter(weig, FIL == 0, Time == 4)
+AvgWeights <- as.numeric()
+for(i in levels(as.factor(Weight1$Treatment))){
+   AvgWeights <-c(AvgWeights,mean(Weight1$weight[which(Weight1$Treatment == i)]))
+}
+
+##Calculating the average time spent by adults of each treatment group
+##For each behavious
+
+##Avg S
+AvgS <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgS <- c(AvgS, mean(behaviour1$S[which(behaviour1$treatment == i)]))
+}
+
+
+##Avg GR
+AvgGR <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgGR <- c(AvgGR, mean(behaviour1$GR[which(behaviour1$treatment == i)]))
+}
+
+
+##Avg W
+AvgW <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgW <- c(AvgW, mean(behaviour1$W[which(behaviour1$treatment == i)]))
+}
+
+
+##Avg F
+AvgF <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgF <- c(AvgF, mean(behaviour1$F[which(behaviour1$treatment == i)]))
+}
+
+
+##Avg PR
+AvgPR <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgPR <- c(AvgPR, mean(behaviour1$PR[which(behaviour1$treatment == i)]))
+}
+
+
+##Avg N
+AvgN <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgN <- c(AvgN, mean(behaviour1$N[which(behaviour1$treatment == i)]))
+}
+
+
+##Avg M
+AvgM <- as.numeric()
+for(i in levels(as.factor(behaviour1$treatment))){
+  AvgM <- c(AvgM, mean(behaviour1$M[which(behaviour1$treatment == i)]))
+}
+
+Treatments <- c(0, 5, 15, 50, 100, 500)
+WeiBeha <- data.frame(Treatments, AvgWeights, AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM)
+
+
+WeiBeha2 <- WeiBeha %>%
+  pivot_longer(!c(Treatments,AvgWeights), names_to = "Behaviour", values_to = "seconds")
+
+WeiBeha2$Treatments <- as.factor(WeiBeha2$Treatments)
+G1 <- ggplot(data=WeiBeha2, aes(x= Treatments, y=seconds, fill = Behaviour)) +
+  geom_bar(stat="identity", position=position_dodge())+
+  ggtitle("Effect of weight on behaviour")
+
+G1 + scale_x_discrete(labels=c("0" = "0 (0.327g)", "5" = "5 (0.324g)",
+                              "15" = "15 (0.324g)", "50" = "50 (0.327g)",
+                              "100" = "100 (0.319g)", "500" = "500 (0.312g)"))
+
+```
 
 
 
-
-### c.Effect of treatment on weight
 ```{r, error=FALSE,warning=FALSE, echo=FALSE}
 lavalweight <- weig
 View(lavalweight)
