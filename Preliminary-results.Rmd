@@ -367,7 +367,7 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 ### b. Effects of treatments on behaviour
 
 
-##### Step 1. Organizing the data. 
+##### b1. Organizing the data. 
 We had to convert our data from the tibble format to a numeric dataframe. 
 ```{r, error=FALSE}
 behaviour1 <- beha  ## making a copy of the originaml dataframe
@@ -380,7 +380,7 @@ colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
 
 ```
 
-##### Step 2.Analysis
+##### b2. Principal Component Analysis
 
 We ran the prcomp command to run a PCA on our dataframe. 
 ```{r, fig.cap = "Figure x: From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.", error=FALSE}
@@ -400,16 +400,12 @@ fviz_eig(pca1, addlabels = TRUE)
 
 
 var <- get_pca_var(pca1)
-var
-head(var$coord)
-head(var$cos2)
-head(var$contrib)
 
 autoplot(var$cor, main = "Heat map")
 ```
 From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
-correlation circle:
+### correlation circle:
 ```{r, fig.cap = "Figure x: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. ", error=FALSE,warning=FALSE}
 fviz_pca_var(pca1, col.var = "black")
 ```
@@ -422,23 +418,16 @@ Individuals PCA
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 ```
 
-###Anova, Shapiro Wilk, and Kruskal Wallis to study the effect of treatment on behaviour
+### b3. Anova, Shapiro Wilk, and Kruskal Wallis to study the effect of treatment on behaviour
 
 ```{r}
 beh.aovS <- aov(S ~ treatment, data = b2)
-summary.aov(beh.aovS)
 beh.aovGR<- aov(GR ~ treatment, data = b2)
-summary.aov(beh.aovGR)
 beh.aovW <- aov(W ~ treatment, data = b2)
-summary.aov(beh.aovW)
 beh.aovF <- aov(F ~ treatment, data = b2)
-summary.aov(beh.aovF)
 beh.aovPR <- aov(PR ~ treatment, data = b2)
-summary.aov(beh.aovPR)
 beh.aovN <- aov(N ~ treatment, data = b2)
-summary.aov(beh.aovN)
 beh.aovM <- aov(M ~ treatment, data = b2)
-summary(beh.aovM)
 ```
 
 
@@ -478,7 +467,7 @@ From the Kruskal Waliis test we can see that
 1. For Waiting, Flying, Pruning behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
 In the rest of the behaviours, the time  spent in each behaviour was different but there is no pattern in their classification. For example, in Mating behaviour, the control adults and the adults exposed to 500 ppb of thiamethoxam are grouped together.
 
-### c. Comparing the effect of weight on behaviour
+### b4. Comparing the effect of weight on behaviour
 
 It was not possible to identify the same individuals in both the weight and behaviour dataset. So we took the average weight for each treatment and the average time spent by each treatment group for each behaviour. Note that the average weight for each behaviour is similar. We combined this data into a single dataframe and made a barplot to visualize the result.
 
@@ -546,7 +535,6 @@ for(i in levels(as.factor(behaviour1$treatment))){
 Treatments <- c(0, 5, 15, 50, 100, 500)
 WeiBeha <- data.frame(Treatments, AvgWeights, AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM)
 
-WeiBeha
 
 WeiBeha2 <- WeiBeha %>%
   pivot_longer(!c(Treatments,AvgWeights), names_to = "Behaviour", values_to = "seconds")
