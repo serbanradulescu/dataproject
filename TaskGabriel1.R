@@ -6,6 +6,8 @@ library(car)
 library(agricolae)
 library(ggplot2)
 library(ggpubr)
+library(rstatix)
+library(RVAideMemoire)
 
 ## The essence of this part is to analyze the effect of treatments on larvae weight(working with the dataframe weight)
 
@@ -65,31 +67,28 @@ Fordifference$FIL <- as.factor(Fordifference$FIL)
 
 str(Fordifference)
 
-#One-way ANOVA to determine the effect of thiamethoxam on weight
+
+#Test for normality using the Shapiro–Wilk statistic to determine the normality of the difference in weigth
+
+ggdensity(Fordifference$Difference, fill = "lightgray", 
+          title = "Visual judgement of the distribution shape of the weight difference")
+Fordifference %>% shapiro_test(Difference)
+ggqqplot(Fordifference$Difference, title = "Q-Q plot")
+
+
+#One-way ANOVA to determine the effect of thiamethoxam on weight and shapiro.test
 res.aov<- aov(Difference ~ Treatment, data = Fordifference)
 summary(res.aov)
-
-#Test for normality using the Shapiro–Wilk statistic.Making a Q-Q plot  
-##This can only be done after ANOVA
 
 shapiro.test(res.aov$residuals)
 qqnorm(res.aov$residuals)
 qqline(res.aov$residuals)
 
-## Based on the shapiro.test, we can conclude that the distribution of the treatment
-## effect was significantly different from normal distribution
 
 
-##LeveneTest for equality of Variance
-#Hypothesis
-#H0: The variance for all groups are equal
-#H1: At least one variance is not equal
-
-
-leveneTest(Difference ~ Treatment, data = Fordifference)
-
-#Based on the LeveneTest, the variance for all the groups are equal
-
+## Based on the shapiro.test, we can conclude that the distribution of weight
+#diverge from normal distribution. There is need to use another statistical test 
+#which can perfectly analyze a not normal distributed data.
 
 #Kruskal Wallis to determine the effect of thiamethoxam on pupal weight
 
@@ -120,9 +119,10 @@ Fordifference %>%
  ###Fisher's test
 ##Hypothesis : H0 :  the treatment has no effect on FIL
               #H1 :  the treatment has effect on FIL
-fisher.test(Fordifference$FIL, Fordifference$Treatment)
-
-
+ff <- table(Fordifference$FIL, Fordifference$Treatment)
+ff
+fisher.test(ff)
+fisher.multcomp(ff)
 
  #p-value 0.3198 is greater than 0.05, therefore, 
 ##there is no sufficient evidence to accept the alternative hypothesis
