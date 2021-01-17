@@ -68,19 +68,14 @@ Fordifference$FIL <- as.factor(Fordifference$FIL)
 str(Fordifference)
 
 
-#Test for normality using the Shapiro–Wilk statistic to determine the normality of the difference in weigth
-
-ggdensity(Fordifference$Difference, fill = "lightgray", 
-          title = "Visual judgement of the distribution shape of the weight difference")
-Fordifference %>% shapiro_test(Difference)
-ggqqplot(Fordifference$Difference, title = "Q-Q plot")
 
 
 #One-way ANOVA to determine the effect of thiamethoxam on weight and shapiro.test
 res.aov<- aov(Difference ~ Treatment, data = Fordifference)
-summary(res.aov)
 
-shapiro.test(res.aov$residuals)
+rs <- shapiro.test(res.aov$residuals)
+print (rs[["p.value"]])
+ggdensity(res.aov$residuals, fill = "lightgray", title = "Distribution shape of the data")
 qqnorm(res.aov$residuals)
 qqline(res.aov$residuals)
 
@@ -92,11 +87,16 @@ qqline(res.aov$residuals)
 
 #Kruskal Wallis to determine the effect of thiamethoxam on pupal weight
 
-kruz <- kruskal(Fordifference$Difference, trt = Fordifference$Treatment)
-print(kruz)
+weight <- Fordifference$Difference
+kruz <- kruskal(weight, trt = Fordifference$Treatment)
+print(kruz[["groups"]])
+
+
 
 ##Based on the Kruskal Wallis test, there is no significant difference between 
 ## treatments
+
+
 
 ##Make a plot for visual representation of the analysis and comparison between treatments and control
 my_comparisons <- list(c("0", "5"), c("0", "15"),c("0", "50"),c("0", "100"),
