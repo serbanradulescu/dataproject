@@ -563,8 +563,10 @@ G1 + scale_x_discrete(labels=c("0" = "0 (0.327g)", "5" = "5 (0.324g)",
 ```
 
 
-## C.: Weight Analysis
-```{r, error=FALSE, echo=FALSE}
+### C.  Weight Analysis
+
+###### Before the main analysis was carried out, several adjusments were made on the data. A new data.frame was created to compute the needed parameters. It was discovered that during the experiment, some lavae escaped the treatment site, and as such made it impossible to obtain their final weight. We therefore pulled together those lavae having the initial and final data. Difference was obtained between their initial and the final weight and this was used for the analysis.
+```{r}
 lavalweight <- weig
 View(lavalweight)
 
@@ -573,7 +575,7 @@ View(lavalweight)
 Initialwgt <- filter(lavalweight, Time == 1)
 Finalwgt <- filter(lavalweight, Time == 4)
 
-#Find the difference between the final and initial weight. There is a difference in the number of row between the newly created data.frames, because some lavae escaped before the final weight and some immediately after the first weight, so there is a need to get those reps that have both the final and the initial weight to get the difference in weight.
+#Find the difference between the final and initial weight. There is a difference in the number of row between the newly created data.frames, because some lavae escaped before the final weight and some immediately after the first weight, so there is a need to get those replications that have both the final and the initial weight to get the difference in weight.
 
 Fordifference <- filter(lavalweight, Time == 4)
 
@@ -608,25 +610,26 @@ Fordifference$FIL <- as.factor(Fordifference$FIL)
 
 ```
 
-### c1: Test for normality using the Shapiro–Wilk statistic to determine the normality of the difference in weigth
-
-### c2: P.Value for Shapiro.test after the ANOVA
+#### c1:  P.value for Shapiro test after the ANOVA and visual representation of the analysis
 ```{r echo=TRUE}
 res.aov<- aov(Difference ~ Treatment, data = Fordifference)
 
 rs <- shapiro.test(res.aov$residuals)
 print (rs[["p.value"]])
+ggdensity(res.aov$residuals, fill = "lightgray", 
+          title = "Distribution shape of the data")
 qqnorm(res.aov$residuals)
 qqline(res.aov$residuals)
 
-## Based on the shapiro.test, we can conclude that the distribution of weight diverge from normal distribution. There is need to use another statistical test which can perfectly analyze a not normal distributed data.
 
 ```
+###### Based on the result of the Shapiro-Wilk test, we can infer that the distribution of the weight data does not assume a normal distribution. Therefore, there is a need to test the data using a different test which could contain a not normally distributed data
 
-
-### c3: Kruskal-Wallis  analysis and Visual representation of the analysis
-```{r echo=TRUE}
-kruz <- kruskal(Fordifference$Difference, trt = Fordifference$Treatment)
+#### c2: Kruskal-Wallis  analysis and Visual representation of the analysis
+```{r echo=TRUE, warning=FALSE}
+weight <- Fordifference$Difference
+kruz <- kruskal(weight, trt = Fordifference$Treatment)
+print(kruz[["groups"]])
 
 ##Based on the Kruskal Wallis test, there is no significant difference between treatments
 
@@ -646,6 +649,20 @@ Fordifference %>%
   stat_compare_means(method = "kruskal.test")+
   stat_compare_means(comparisons = my_comparisons,label.y = c(0.43,0.46,0.49,0.52,0.55))+
   stat_compare_means(label.y = 70)
+
+```
+
+#### Fisher's exact test and fisher multcomp test between between FIL and the treatment. Done to determine if there are significant difference between treatments and FIL
+```{r echo=TRUE}
+ff <- table(Fordifference$FIL, Fordifference$Treatment)
+ff1 <- fisher.test(ff)
+print (ff1[["p.value"]])
+
+#Based on the fisher's test (i.e p.value = 0.3198), there are no significant difference between the treatment
+
+ff2 <- fisher.multcomp(ff)
+
+knitr::kable( ff2[["p.value"]])
 
 ```
 
