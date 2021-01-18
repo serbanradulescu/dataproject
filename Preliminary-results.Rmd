@@ -109,9 +109,13 @@ H1': Treatments affect survival
 ### OBJECTIVE OF BEHAVIOUR STUDY
 To study if the exposure to different concentrations of thiamethoxam during the larval stage affects the behaviour of hoverflies as adults.
 
-Hypothesis 0: The amount of thiamethoxam hoverfly larvae are exposed to affects their behaviour as adults.
-Hypothesis 1: The amount of thiamethoxam hoverfly larvae are exposed to does not affect their behaviour as adults.
+Hypothesis 1:
+H0: The amount of thiamethoxam hoverfly larvae are exposed to affects their behaviour as adults.
+H1: The amount of thiamethoxam hoverfly larvae are exposed to does not affect their behaviour as adults.
 
+Hypothesis 1': Relationship between larval weight and adult hoverfly behaviour.
+H0: Larval weight influences adult behaviour
+H1: Larval weight does not influence adult behaviour.
 
 
 ### OBJECTIVE OF WEIGHT DATA
@@ -448,7 +452,7 @@ beh.aovM <- aov(M ~ treatment, data = b2)
 
 ##### Test for normality using Shapiro Wilk test
 
-###### The p values for stationary, grooming, waiting, flying, probing, feeding, mating respectively.
+###### The p values for stationary, grooming, walking, flying, probing, feeding, moving respectively.
 ```{r}
 SS <- shapiro.test(beh.aovS$residuals)
 SSp <- SS[["p.value"]]
@@ -504,8 +508,8 @@ knitr::kable(krusM$groups, align='ccccccc', format = "simple", caption =  "Krusk
 ```
 
 ###### From the Kruskal Waliis test we can see that
-###### 1. For Waiting, Flying, Probing behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
-###### In the rest of the behaviours, the time  spent in each behaviour was different but there is no pattern in their classification. For example, in Mating behaviour, the control adults and the adults exposed to 500 ppb of thiamethoxam are grouped together.
+###### 1. For Walking, Flying, Probing behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
+###### In the rest of the behaviours, the time  spent in each behaviour was different but there is no pattern in their classification. For example, in Moving behaviour, the control adults and the adults exposed to 500 ppb of thiamethoxam are grouped together.
 
 #### b4. Is there a relationship between weight and behaviour?
 
