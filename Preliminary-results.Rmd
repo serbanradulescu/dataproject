@@ -678,19 +678,18 @@ All in all, the objective of reproducing the study was reached succesfully and t
 
 ## 8. Conclusions.
 Place for improvement for the authors: 
--impossible to track individuals between data sets (they had other numbers in survival and weight)
--more analysis could be done by the original authors: redefine survival, heat maps or whatever is useful)
+-impossible to track individuals between data sets (inconsistent labelling with no legends)
+-more analysis could be done by the original authors: redefine survival, Principal Component Analysis for behaviour)
 -the data sets notation is not clearly explained(a lot of time was spend to understand what FIL means, we are almost sure that it means Found In Leaves)
--including a multivariate analysis like PCA would be a better choice than Kruskal-Wallis for individual behaviour
 -they never responded to our questions about the study on the peerj platform
 
 However, we strongly appreciate the author's work:
--the theme is very relevant, supporting sustainability and biodiversity (looking at a pollinator)
--easily overall understandability and simplicity
+-the theme is very relevant, supporting sustainability and biodiversity (looking at a minor pollinator)
+-simple and easily understandable made it an ideal for studying
 
 We also appreciate the complex experimental design: 
 -they found a place with no history of insecticide use 
--including eggs were collected from different females to account for genetical variation with respect to thiamethoxin tolerance (in different experience round)
+-including eggs were collected from different females to account for genetic variation with respect to thiamethoxam tolerance (in different experience round)
 -elaborate measures to simulate natural environment
 
 We have advanced a lot
@@ -699,13 +698,13 @@ We have advanced a lot
 -countless new R and statistical practical and theoretical knowledge: Kaplan-Meier curves, how to transform the data, how to study and analyze categorical data
 PCA: elipses, Heatmap , Correlation circle
 
-We practically used what we learned in the klass: ANOVA, Shapiro, Kruskal-Walis,ggplot function, Fisher Test and stat compare mean
+We practically used what we learned in the class: ANOVA, Shapiro, Kruskal-Walis,ggplot function, Fisher Test and stat compare mean
 
 We still have a lot to learn:
 -syntax to be learned
 -a lot of statistical tests, tools and graphical representations to be "discovered" by each one
 -how to come up with ideas for our own research
 -how to organize our own research and the collected data
--how to deal with larger data sets (from this project it was small)
--because of the poor quality of the data notations between the different data sets(survival, weight, behaviour) we coul not do addition analysis like mediation and moderation and that is something we would have liked to practice
+-how to deal with larger data sets (for this project it was small)
+-because of the poor quality of the data notations between the different data sets(survival, weight, behaviour) we could not do additional analysis like mediation and moderation and that is something we would have liked to practice
 -how to make more visually pleasing Rmarkdown documents
