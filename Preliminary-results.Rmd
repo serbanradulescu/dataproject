@@ -359,12 +359,12 @@ anv <- aov( lm(survival$timetopup ~ survival$treatment) )
 #summary(anv)
 ```
 </br>
-```{r HSD Test for weight, fig.cap="Figure a4.2. HSD test that studies the effect of treatment on weight for of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
+```{r HSD Test for weight, fig.cap="Figure a4.2. HSD test that studies the effect of treatment on survival for of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
 
 #Anova shows significant differences between treatments. We proceed with a HSD test.
 
 agri <- HSD.test(anv, 'survival$treatment', alpha = 0.05, group=TRUE, main = "HSD Test")
-plot(agri, main = "Observing statistical differences with agricola package", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
+plot(agri, main = "Effect of treatment on survival", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
 
 #Conclusions:
 #Treatment 500 is the only one that shows significant differences in comparison with the control.
