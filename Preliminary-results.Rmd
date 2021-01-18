@@ -359,7 +359,10 @@ anv <- aov( lm(survival$timetopup ~ survival$treatment) )
 #summary(anv)
 ```
 </br>
-```{r HSD Test for weight, fig.cap="Figure a4.2. HSD test that studies the effect of treatment on survival for of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
+
+#### a5. Effect of treatments on survival (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
+
+```{r HSD Test for survival, fig.cap="Figure a5. HSD test that studies the effect of treatment on survival for of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
 
 #Anova shows significant differences between treatments. We proceed with a HSD test.
 
@@ -588,10 +591,11 @@ G1 + scale_x_discrete(labels=c("0" = "0 (0.327g)", "5" = "5 (0.324g)",
 
 ```
 
+</br>
 
 ### C.  Weight Analysis
 
-###### Before the main analysis was carried out, several adjusments were made on the data. A new data.frame was created to compute the needed parameters. It was discovered that during the experiment, some lavae escaped the treatment site, and as such made it impossible to obtain their final weight. We therefore pulled together those lavae having the initial and final data. Difference was obtained between their initial and the final weight and this was used for the analysis.
+##### Before the main analysis was carried out, several adjusments were made on the data. A new data.frame was created to compute the needed parameters. It was discovered that during the experiment, some lavae escaped the treatment site, and as such made it impossible to obtain their final weight. We therefore pulled together those lavae having the initial and final data. Difference was obtained between their initial and the final weight and this was used for the analysis.
 ```{r}
 lavalweight <- weig
 View(lavalweight)
@@ -641,23 +645,32 @@ Fordifference$FIL <- as.factor(Fordifference$FIL)
 res.aov<- aov(Difference ~ Treatment, data = Fordifference)
 
 rs <- shapiro.test(res.aov$residuals)
-print (rs[["p.value"]])
-ggdensity(res.aov$residuals, fill = "lightgray", 
-          title = "Distribution shape of the data")
-qqnorm(res.aov$residuals)
-qqline(res.aov$residuals)
-
+ra <- (rs[["p.value"]])
 
 ```
+Shapiro-Wilk test p value =`r ra` </br>
+
+```{r, fig.cap= "Figure c1:Distribution shape of the data", echo=TRUE}
+ggdensity(res.aov$residuals, fill = "lightgray")
+```
+
+```{r, fig.cap= "Figure c2:Normal Q-Q plot",echo=TRUE}
+qqnorm(res.aov$residuals)
+qqline(res.aov$residuals)
+```
+
+
+
+
 ###### Based on the result of the Shapiro-Wilk test, we can infer that the distribution of the weight data does not assume a normal distribution. Therefore, there is a need to test the data using a different test which could contain a not normally distributed data
 
-#### c2: Kruskal-Wallis  analysis and Visual representation of the analysis
-```{r echo=TRUE, warning=FALSE}
-weight <- Fordifference$Difference
-kruz <- kruskal(weight, trt = Fordifference$Treatment)
-print(kruz[["groups"]])
+</br>
 
-##Based on the Kruskal Wallis test, there is no significant difference between treatments
+#### c2: Kruskal-Wallis  analysis and Visual representation of the analysis
+```{r fig.cap= "Figure c3:Comparison of treatment effect on larval weight", echo=TRUE, warning=FALSE}
+kruz <- kruskal(Fordifference$Difference, trt = Fordifference$Treatment)
+knitr::kable(kruz$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for weight difference")
+
 
 ##Make a plot for visual representation of the analysis and comparison between treatments and control
 my_comparisons <- list(c("0", "5"), c("0", "15"),c("0", "50"),c("0", "100"),
@@ -671,27 +684,35 @@ Fordifference %>%
   scale_y_continuous(limits = c(0.15, 0.70)) +
   xlab("Treatment") + 
   ylab("Weight")+
-  ggtitle("Comparison of treatment effect on larval weight")+
   stat_compare_means(method = "kruskal.test")+
   stat_compare_means(comparisons = my_comparisons,label.y = c(0.43,0.46,0.49,0.52,0.55))+
   stat_compare_means(label.y = 70)
 
 ```
+</br>
 
-#### Fisher's exact test and fisher multcomp test between between FIL and the treatment. Done to determine if there are significant difference between treatments and FIL
+
+###### Based on the Kruskal Wallis test, there is no significant difference between treatments
+
+</br>
+
+#### c3: Fisher's exact test and fisher multcomp test between between FIL and the treatment. Done to determine if there are significant difference between treatments and FIL
 ```{r echo=TRUE}
 ff <- table(Fordifference$FIL, Fordifference$Treatment)
 ff1 <- fisher.test(ff)
-print (ff1[["p.value"]])
+Fp <- ff1[["p.value"]]
+```
+Fisher test p value =`r Fp` </br>
 
-#Based on the fisher's test (i.e p.value = 0.3198), there are no significant difference between the treatment
+#### Based on the fisher's test (i.e p.value = 0.3198), it can be concluded that the treatment had no effect on the larvae escaping the lagoon
 
+```{r echo=TRUE}
 ff2 <- fisher.multcomp(ff)
 
-knitr::kable( ff2[["p.value"]])
-
+knitr::kable(ff2$p.value[1,], caption = "Table that shows pvalue for the fisher-multcomp test, each treatment being comaperd with control")
 ```
 
+</br>
 
 ## 7. Discussion. From your objectives.
 Our analysis results are in agreement with the author's.
@@ -701,6 +722,8 @@ The redefine of survival has lead to the same results as the initial survival.
 We consider that the Kaplan-Meier curves would be better represented if the survival and time to pupate would be separated in the graphical representation.
 
 All in all, the objective of reproducing the study was reached succesfully and the extra tests and analysis we've done reached the same conclusion.
+
+</br>
 
 ## 8. Conclusions.
 Place for improvement for the authors: 
