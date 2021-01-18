@@ -385,7 +385,7 @@ colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
 #### b2. Principal Component Analysis
 
 We ran the prcomp command to run a PCA on our dataframe. 
-```{r, fig.cap = "Figure x: From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.", error=FALSE}
+```{r, fig.cap = "Figure b2.1: From the Eigen values and the Scree plot of our PCA we understand that Principal Component 1 and Principal Component 2 explain 46.4% of the variance in the data.", error=FALSE}
 pca1 <- prcomp(b1, scale = TRUE)
 
 ##Eigen values
@@ -398,7 +398,7 @@ fviz_eig(pca1, addlabels = TRUE)
 
 ##### Heat mapping
 ###### The heat map explains shows which behaviour is best explained by which Principal Component.
-```{r, fig.cap = "Figure x Heat map for behaviour (A heat map is data analysis software that uses color the way a bar graph uses height and width: as a data visualization tool.)", error=FALSE}
+```{r, fig.cap = "Figure b2.2: Heat map for behaviour. It is a tool that enables us to visualize the dimensions that best explain variance in each behaviour. Key : S - stationary, GR - grooming, W - walking, F - flying, PR - probing, N - feeding(nutrition), M - moving", error=FALSE}
 
 
 var <- get_pca_var(pca1)
@@ -408,7 +408,7 @@ autoplot(var$cor, main = "Heat map")
 From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
 ##### Correlation circle
-```{r, fig.cap = "Figure x: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. ", error=FALSE,warning=FALSE}
+```{r, fig.cap = "Figure b2.3: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. Key : S - stationary, GR - grooming, W - walking, F - flying, PR - probing, N - feeding(nutrition), M - moving", error=FALSE,warning=FALSE}
 fviz_pca_var(pca1, col.var = "black")
 ```
 
@@ -416,7 +416,7 @@ fviz_pca_var(pca1, col.var = "black")
 
 ##### Individuals PCA
 
-```{r, fig.cap = "Figure x: This plot with ellipses shows the distribution of each behaviour following each treatment. From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap", error=FALSE,warning=FALSE}
+```{r, fig.cap = "Figure b2.4: This plot with ellipses shows the distribution of each behaviour following each treatment. From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap, Key : S - stationary, GR - grooming, W - walking, F - flying, PR - probing, N - feeding(nutrition), M - moving. Treatments are measured in parts per billion(ppb).", error=FALSE,warning=FALSE}
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 ```
 
@@ -438,20 +438,29 @@ beh.aovM <- aov(M ~ treatment, data = b2)
 ###### The p values for stationary, grooming, waiting, flying, probing, feeding, mating respectively.
 ```{r}
 SS <- shapiro.test(beh.aovS$residuals)
-print(SS[["p.value"]])
+SSp <- SS[["p.value"]]
 SGR <- shapiro.test(beh.aovGR$residuals)
-print(SGR[["p.value"]])
+SGRp <- SGR[["p.value"]]
 SW <- shapiro.test(beh.aovW$residuals)
-print(SW[["p.value"]])
+SWp <- SW[["p.value"]]
 SF <- shapiro.test(beh.aovF$residuals)
-print(SF[["p.value"]])
+SFp <- SF[["p.value"]]
 SPR <- shapiro.test(beh.aovPR$residuals)
-print(SPR[["p.value"]])
+SPRp <- SPR[["p.value"]]
 SN <- shapiro.test(beh.aovN$residuals)
-print(SN[["p.value"]])
+SNp <- SN[["p.value"]]
 SM <- shapiro.test(beh.aovM$residuals)
-print(SM[["p.value"]])
+SMp <- SM[["p.value"]]
+
 ```
+
+Stationary p value =`r SSp` </br>
+Grooming p value =`r SGRp` </br>
+Walking p value =`r SWp` </br>
+Flying p value =`r SFp` </br>
+Probing p value =`r SPRp` </br>
+Feeding p value =`r SNp` </br>
+Moving p value =`r SMp` </br>
 
 ###### Distribution is not normal.
 
@@ -459,19 +468,25 @@ print(SM[["p.value"]])
 
 ```{r}
 krusS <- kruskal(b2$S, trt = b2$treatment, alpha = 0.05)
-print(krusS[["groups"]])
+knitr::kable(krusS$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for stationary behaviour")
+
 krusGR <- kruskal(b2$GR, trt = b2$treatment, alpha = 0.05)
-print(krusGR[["groups"]])
+knitr::kable(krusGR$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for grooming behaviour")
+
 krusW <- kruskal(b2$W, trt = b2$treatment, alpha = 0.05)
-print(krusW[["groups"]])
+knitr::kable(krusW$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for walking behaviour")
+
 krusF <- kruskal(b2$F, trt = b2$treatment, alpha = 0.05)
-print(krusF[["groups"]])
+knitr::kable(krusF$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for flying behaviour")
+
 krusPR <- kruskal(b2$PR, trt = b2$treatment, alpha = 0.05)
-print(krusPR[["groups"]])
+knitr::kable(krusPR$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for probing behaviour")
+
 krusN <- kruskal(b2$N, trt = b2$treatment, alpha = 0.05)
-print(krusN[["groups"]])
+knitr::kable(krusN$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for feeding(nutrition) behaviour")
+
 krusM <- kruskal(b2$M, trt = b2$treatment, alpha = 0.05)
-print(krusM[["groups"]])
+knitr::kable(krusM$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for moving behaviour")
 
 ```
 
@@ -479,14 +494,15 @@ print(krusM[["groups"]])
 ###### 1. For Waiting, Flying, Probing behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
 ###### In the rest of the behaviours, the time  spent in each behaviour was different but there is no pattern in their classification. For example, in Mating behaviour, the control adults and the adults exposed to 500 ppb of thiamethoxam are grouped together.
 
-#### b4. Comparing the effect of weight on behaviour
+#### b4. Is there a relationship between weight and behaviour?
 
 ###### It was not possible to identify the same individuals in both the weight and behaviour dataset. So we took the average weight for each treatment and the average time spent by each treatment group for each behaviour. Note that the average weight for each behaviour is similar. We combined this data into a single dataframe and made a barplot to visualize the result.
 
 ###### However, this comparison is not perfect. There was weight data for 145 individuals from which we got our average weights. However only 117 individuals were observed for behaviour.
 ###### It is possible that some of the larva that formed pupa did not emerge as adult hoverflies and so their behaviour was not recorded.
 
-```{r}
+```{r, fig.cap = "Figure b4.1: Relationship between average weight for each treatment and average time spent for each behaviour, Key : AvgS - average time spent being stationary, AvgGR - Average time spent grooming, AvgW - Average time spent walking, AvgF - Average time spent flying, AvgPR - Average time spent probing, AvgN - Average time spent feeding(nutrition), AvgM - Average time spent moving. Treatments are measured in parts per billion(ppb) and time is measured in seconds.", error=FALSE,warning=FALSE}
+
 Weight1 <- filter(weig, FIL == 0, Time == 4)
 AvgWeights <- as.numeric()
 for(i in levels(as.factor(Weight1$Treatment))){
@@ -554,7 +570,7 @@ WeiBeha2 <- WeiBeha %>%
 WeiBeha2$Treatments <- as.factor(WeiBeha2$Treatments)
 G1 <- ggplot(data=WeiBeha2, aes(x= Treatments, y=seconds, fill = Behaviour)) +
   geom_bar(stat="identity", position=position_dodge())+
-  ggtitle("Effect of weight on behaviour")
+  ggtitle("Relationship between weight and behaviour")
 
 G1 + scale_x_discrete(labels=c("0" = "0 (0.327g)", "5" = "5 (0.324g)",
                               "15" = "15 (0.324g)", "50" = "50 (0.327g)",
