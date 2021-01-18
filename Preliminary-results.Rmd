@@ -1,5 +1,5 @@
 ---
-title: "1. Title:Preliminary-results"
+title: "1. Title:Final-results"
 author: "2. Team members names: Maya Hachicha, Gabriel Olawuyi, Madhav Chandarana, Radulescu Serban"
 date: "15/12/2020"
 output: 
@@ -158,10 +158,10 @@ we sourced our data from the PeerJ article mentioned above. We did Principal Com
 
 ## 6. Results. Figures and tables with captions and description of what do they mean.
 
-### a1. Effect of treatments on survival (multi-comp Fisher Test): 
-#### treatment500 has significant differences with all of them, between the others there is no significant difference
+#### a1. Effect of treatments on survival (multi-comp Fisher Test): 
+##### treatment500 has significant differences with all of them, between the others there is no significant difference
 
-```{r effect of treatments on survival, fig.cap = "Figure 1: Plot to see the differences between blocks and treatments", echo=TRUE}
+```{r effect of treatments on survival, fig.cap = "Figure a1: Plot to see the differences between blocks and treatments of the survival of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", echo=TRUE}
 #Step 1: We plot it in order to see if:
 #-there are differences between the blocks
 #-there are differences between the treatments
@@ -197,19 +197,22 @@ t1 <- table(survival$treatment, survival$dead)
 #We proceed with a multi-comparation fisher test.
 ```
 
-### Multi-comparation fisher test, each treatment compared with the control
+#### Multi-comparation fisher test, each treatment compared with the control
 
 ```{r 2-effect of treatments on survival, echo=TRUE}
 f1 <- fisher.multcomp(t1)
-knitr::kable(f1$p.value[,1], caption = "Table that shows pvalue for the mumti-fisher test, each treatment being comaperd with control")
+knitr::kable(f1$p.value[,1], align = 'ccccc', format='simple', caption = "Table that shows pvalue for the mumti-fisher test, each treatment being comaperd with control")
 
 ```
+
+
+
 Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05) 
+</br> </br>
 
+#### a2. Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
 
-### a2. Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
-
-```{r effect of treatments on REDEFINED survival,fig.cap = "Figure 2: Plot to see the differences between blocks and treatments on REDEFINED survival", error=FALSE, echo=TRUE}
+```{r effect of treatments on REDEFINED survival,fig.cap = "Figure a2.1: The differences between blocks and treatments on REDEFINED survival for Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
 #Redefine survival and redo the analyses
 
 #Step 1:  Redefine dead
@@ -280,7 +283,7 @@ t1 <- table(survival$treatment, survival$redefdead)
 #We proceed with a multi-comparation fisher test.
 ```
 
-### Multi-comparation fisher test, each treatment compared with the control
+#### Multi-comparation fisher test, each treatment compared with the control
 
 ```{r 2-effect of treatments on REDEFINED survival, error=FALSE, echo=TRUE}
 f1 <- fisher.multcomp(t1)
@@ -288,12 +291,13 @@ knitr::kable(f1$p.value[,1],cap = "This table shows the multi-comparation fisher
 
 
 ```
+</br>
 Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05)
+</br> </br>
 
+#### a3. A plot that puts survival and pupate in perspective (Kaplan-Meier curves)
 
-### a3. A plot that puts survival and pupate in perspective (Kaplan-Meier curves)
-
-```{r Kaplan-Meier curves, fig.cap = "Figure  Kaplan-Meier curves for survival" , error=FALSE, echo=TRUE}
+```{r Kaplan-Meier curves, fig.cap = "Figure a3.1.  Cumulative survival of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control." , error=FALSE, echo=TRUE}
 
 
 
@@ -313,11 +317,13 @@ ggsurvplot(fit1, data = survival, pval = TRUE)
 
 ```
 
+</br>
 
+#### a4. Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
 
-### a4. Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
+</br>
 
-```{r Effect of treatments on time to pupate (ANOVA), fig.cap="Figure  Kaplan-Meier curves for time to pupate", error=FALSE, echo=TRUE}
+```{r Effect of treatments on time to pupate (ANOVA), fig.cap="Figure a4.1: Time to pupate of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
 
 #Part 2 - Analysis on time to pupate on the original defined survival, as for the redefined we weren't able to identify the individuals
 
@@ -352,8 +358,8 @@ lm1 <- lm(timetopup ~ treatment + exp_round +
 anv <- aov( lm(survival$timetopup ~ survival$treatment) )
 #summary(anv)
 ```
-
-```{r HSD Test for weight, fig.cap="Figure  HSD test to see the effect of treatment on weight", error=FALSE, echo=TRUE}
+</br>
+```{r HSD Test for weight, fig.cap="Figure a4.2. HSD test that studies the effect of treatment on weight for of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
 
 #Anova shows significant differences between treatments. We proceed with a HSD test.
 
@@ -365,6 +371,10 @@ plot(agri, main = "Observing statistical differences with agricola package", yla
 
 
 ```
+</br>
+Conclusions:
+Treatment 500 is the only one that shows significant differences in comparison with the control. </br> </br>
+
 
 ### b. Effects of treatments on behaviour
 
