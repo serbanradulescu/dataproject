@@ -91,7 +91,6 @@ M- moving, which includes making small jerking motion while being stationary
 <br/> 5.weight - in grams
 
 ---
-
 ## 4. Objectives and hypotheses.
 
 In this project, the objectives will be to reproduce the analysis done by the team that conducted the study. Further analysis can be conducted, at the recommendation of the coordinating professor.
@@ -105,6 +104,7 @@ Hypothesis 1': Redefine survival  and redo the analyses
 H0': Treatments do not affect survival
 H1': Treatments affect survival
 
+</br>
 
 ### OBJECTIVE OF BEHAVIOUR STUDY
 To study if the exposure to different concentrations of thiamethoxam during the larval stage affects the behaviour of hoverflies as adults.
@@ -117,15 +117,21 @@ Hypothesis 1': Relationship between larval weight and adult hoverfly behaviour.
 H0: Larval weight influences adult behaviour
 H1: Larval weight does not influence adult behaviour.
 
+</br>
 
 ### OBJECTIVE OF WEIGHT DATA
-To analyse the response of larvae weights to different concentration of thiamethoxan 
+-To analyse the response of larvae weights to different concentration of thiamethoxan 
+-To check the effect of the treatment on the possiblity of the larvae to escape the experimental lagoon
+
+
 Hypothesis:
 H0: Larval weight does not depend upon the concentration of insecticide it is exposed to. 
 H1: Larval weight depends upon the concentration of insecticide it is exposed to.
+</br>
+H0: Treatment has an effect on escaping the lagoon
+H1: Treatment has no effect on escaping the lagoon
 
-
-
+</br>
 
 ## 5. Methods. What have you done? And what did you use to do it? Step by step, so anyone could do it again by reading this part.
 
@@ -152,15 +158,19 @@ Same results are obtained with the redefined survival. We redefine survival as t
 
 We also did an anova for the effect of treatment on the time to pupate. The effects of the blocks and the interaction between blocks and treatment was studied. No interaction (p = 0.27), we proceed with the anova. The anova has shown significantly different effects. Furthermore, a HSD test showed two types of effects: a and b.
 
+</br>
 
 ### Methods for weight
 Initial and final weight were made into different data frames. This was needed to find weight gain of the larvae. There is a difference in the number of rows between the newly created data frames, because some larvae escaped before the final weight and some immediately after the first weight, as a such, replicates having both the final and the initial weight were pulled to make a data frame. ANOVA and a Kruskal-Wallis test were used to check the effect of treatment on the larval weight.  Shapiro.test was used to check normality of data. 
+
+</br>
 
 ### Metods for behaviour:
 
 we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.Other metods were too complex to be explained here, detailed with plots in results.
 
 ## 6. Results. Figures and tables with captions and description of what do they mean.
+</br>
 
 #### a1. Effect of treatments on survival (multi-comp Fisher Test): 
 ##### treatment500 has significant differences with all of them, between the others there is no significant difference
@@ -399,6 +409,8 @@ colnames(b2)[colnames(b2) == "as.factor.beha.treatment."] <- "treatment"
 
 ```
 
+</br>
+
 #### b2. Principal Component Analysis
 
 We ran the prcomp command to run a PCA on our dataframe. 
@@ -412,6 +424,8 @@ eig.val <- get_eigenvalue(pca1)
 fviz_eig(pca1, addlabels = TRUE)
 ```
 
+</br>
+
 
 ##### Heat mapping
 ###### The heat map explains shows which behaviour is best explained by which Principal Component.
@@ -424,18 +438,22 @@ autoplot(var$cor, main = "Heat map")
 ```
 From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
+</br>
+
 ##### Correlation circle
 ```{r, fig.cap = "Figure b2.3: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. Key : S - stationary, GR - grooming, W - walking, F - flying, PR - probing, N - feeding(nutrition), M - moving", error=FALSE,warning=FALSE}
 fviz_pca_var(pca1, col.var = "black")
 ```
 
-
+</br>
 
 ##### Individuals PCA
 
 ```{r, fig.cap = "Figure b2.4: This plot with ellipses shows the distribution of each behaviour following each treatment. From this plot we can conclude that there is no significant difference between the effect of treatment on different behaviours because the ellipses overlap, Key : S - stationary, GR - grooming, W - walking, F - flying, PR - probing, N - feeding(nutrition), M - moving. Treatments are measured in parts per billion(ppb).", error=FALSE,warning=FALSE}
 autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm')
 ```
+
+</br>
 
 #### b3. Shapiro Wilk, and Kruskal Wallis to study the effect of treatment on behaviour
 
@@ -449,8 +467,11 @@ beh.aovN <- aov(N ~ treatment, data = b2)
 beh.aovM <- aov(M ~ treatment, data = b2)
 ```
 
+</br>
 
 ##### Test for normality using Shapiro Wilk test
+
+</br>
 
 ###### The p values for stationary, grooming, walking, flying, probing, feeding, moving respectively.
 ```{r}
@@ -481,6 +502,8 @@ Moving p value =`r SMp` </br>
 
 ###### Distribution is not normal.
 
+</br>
+
 ##### Kruskal Wallis test
 
 ```{r}
@@ -506,6 +529,9 @@ krusM <- kruskal(b2$M, trt = b2$treatment, alpha = 0.05)
 knitr::kable(krusM$groups, align='ccccccc', format = "simple", caption =  "Kruskal-Wallis groups for moving behaviour")
 
 ```
+
+
+
 
 ###### From the Kruskal Waliis test we can see that
 ###### 1. For Walking, Flying, Probing behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
