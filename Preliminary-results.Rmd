@@ -161,7 +161,7 @@ We also did an anova for the effect of treatment on the time to pupate. The effe
 </br>
 
 ### Methods for weight
-Initial and final weight were made into different data frames. This was needed to find weight gain of the larvae. There is a difference in the number of rows between the newly created data frames, because some larvae escaped before the final weight and some immediately after the first weight, as a such, replicates having both the final and the initial weight were pulled to make a data frame. ANOVA and a Kruskal-Wallis test were used to check the effect of treatment on the larval weight.  Shapiro.test was used to check normality of data. 
+Initial and final weight were made into different data frames. This was needed to find weight gain of the larvae. There is a difference in the number of rows between the newly created data frames, because some larvae escaped before the final weight and some immediately after the first weight, as such, replicates having both the final and the initial weight were pulled to make a data frame. ANOVA and Kruskal-Wallis test were used to check the effect of treatment on the larval weight.  Shapiro.test was used to check normality of data. 
 
 </br>
 
