@@ -184,78 +184,18 @@ AvgM
 Treatments <- c(0, 5, 15, 50, 100, 500)
 WeiBeha <- data.frame(Treatments, AvgWeights, AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM)
 
-barplot(WeiBeha, height = 600, width = 7)
-### Comparing the effect of weight on behaviour
-Weight1 <- filter(weig, FIL == 0, Time == 4)
-AvgWeights <- as.numeric()
-for(i in levels(as.factor(Weight1$Treatment))){
-  AvgWeights <-c(AvgWeights,mean(Weight1$weight[which(Weight1$Treatment == i)]))
-}
-AvgWeights
+WeiBeha2 <- WeiBeha %>%
+  pivot_longer(!c(Treatments,AvgWeights), names_to = "Behaviour", values_to = "seconds")
 
-M <- filter(Weight1, Treatment == 15, Time == 4)
-mean(M$weight)
-##Calculating the average time spent by adults of each treatment group
-##For each behavious
+WeiBeha2$Treatments <- as.factor(WeiBeha2$Treatments)
 
-##Avg S
-AvgS <- as.numeric()
-for(i in levels(as.factor(behaviour1$treatment))){
-  AvgS <- c(AvgS, mean(behaviour1$S[which(behaviour1$treatment == i)]))
-}
-AvgS
+G1 <- ggplot(data=WeiBeha2, aes(x= Treatments, y=seconds, fill = Behaviour)) +
+  geom_bar(stat="identity", position=position_dodge())+
+  ggtitle("Relationship between weight and behaviour")
 
-##Avg GR
-AvgGR <- as.numeric()
-for(i in levels(as.factor(behaviour1$treatment))){
-  AvgGR <- c(AvgGR, mean(behaviour1$GR[which(behaviour1$treatment == i)]))
-}
-AvgGR
-
-##Avg W
-AvgW <- as.numeric()
-for(i in levels(as.factor(behaviour1$treatment))){
-  AvgW <- c(AvgW, mean(behaviour1$W[which(behaviour1$treatment == i)]))
-}
-AvgW
-
-##Avg F
-AvgF <- as.numeric()
-for(i in levels(as.factor(behaviour1$treatment))){
-  AvgF <- c(AvgF, mean(behaviour1$F[which(behaviour1$treatment == i)]))
-}
-AvgF
-
-##Avg PR
-AvgPR <- as.numeric()
-for(i in levels(as.factor(behaviour1$treatment))){
-  AvgPR <- c(AvgPR, mean(behaviour1$PR[which(behaviour1$treatment == i)]))
-}
-AvgPR
-
-##Avg N
-AvgN <- as.numeric()
-for(i in levels(as.factor(behaviour1$treatment))){
-  AvgN <- c(AvgN, mean(behaviour1$N[which(behaviour1$treatment == i)]))
-}
-AvgN
-
-##Avg M
-AvgM <- as.numeric()
-for(i in levels(as.factor(behaviour1$treatment))){
-  AvgM <- c(AvgM, mean(behaviour1$M[which(behaviour1$treatment == i)]))
-}
-AvgM
-Treatments <- c(0, 5, 15, 50, 100, 500)
-WeiBeha <- data.frame(Treatments, AvgWeights, AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM)
-
-barplot(WeiBeha, height = 500, width = 7)
-WB <- ggplot(data=WeiBeha, aes(x=AvgWeights, y=AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM, fill=supp))
-
-geom_bar(stat = "identity")WB <- ggplot(data=WeiBeha, aes(x=AvgWeights, y=AvgS, AvgGR, AvgW, AvgF, AvgPR, AvgN, AvgM, fill=supp))
-
-geom_bar(stat = "identity")
-
-
+G1 + scale_x_discrete(labels=c("0" = "0 (0.327g)", "5" = "5 (0.324g)",
+                               "15" = "15 (0.324g)", "50" = "50 (0.327g)",
+                               "100" = "100 (0.319g)", "500" = "500 (0.312g)"))
+#Madhab figured out this method 
 
 

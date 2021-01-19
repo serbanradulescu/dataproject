@@ -436,7 +436,7 @@ var <- get_pca_var(pca1)
 
 autoplot(var$cor, main = "Heat map")
 ```
-From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth compnent also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
+From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth component also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
 </br>
 
