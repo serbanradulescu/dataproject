@@ -37,7 +37,7 @@ library(car)
 ## 3. Introduction. Explain the origin and structure of your data.
 Data comes from: https://peerj.com/articles/4258/, which is Effects of chronic exposure to thiamethoxam on larvae of the hoverfly Eristalis tenax (Diptera, Syrphidae).
 
-The aquatic larvae of hoverfly were raised in lagoons with different concentrations of thiamethoxam. The paper studies the impact of the pesticide on larval development(weight gain), survival(whether the larva forms a pupa or not) , and seven adult behaviours.
+The aquatic larvae of hoverfly were raised in lagoons with different concentrations of thiamethoxam. The paper studied the impact of the pesticide on larval development(weight gain), survival(whether the larva forms a pupa or not) , and seven adult behaviours.
 Five-day old larvae were exposed to six concentrations of the pesticide measured in parts per billion(ppb) – 0, 5, 15, 50, 100, and 500. 
 10 larval replicates per treatment
 4 rounds of experiment
@@ -47,7 +47,7 @@ This resulted in 3 tables that we use as data frames: survival, behaviour, weigh
 
 ###   a.survival
 
- survival is a dataset with 6 column:
+ survival is a dataset with 6 columns:
 <br/> 1.the ID of repetition
 <br/> 2.exp_round - different blocks, with 8 repetitions
 <br/> 3.treatment - Control (0),T1=5, T2= 15, T3= 50, T4= 100, T5= 500 (quantity of substance applied)
@@ -64,14 +64,14 @@ survived (5 days to time it forms a pupae)
 The behaviour data records the time spent by 7 day old adult hoverflies.
 Seven adult behaviours were studied for 10 minutes (600 seconds) and
 the time spent on each behaviour was recorded in seconds. 
-The behaviours studied are - 
-S- stationary
-GR- grooming
-W- walking
-F- flying
-PR- probing through the cage netting with their proboscis
-N- feeding on nectar, pollen, and water
-M- moving, which includes making small jerking motion while being stationary
+The behaviours studied are: 
+</br> S- stationary
+</br> GR- grooming
+</br> W- walking
+</br> F- flying
+</br> PR- probing through the cage netting with their proboscis
+</br> N- feeding on nectar, pollen, and water
+</br> M- moving, which includes making small jerking motion while being stationary
 
 <br/> 1.The blocks (1,2,3,4)
 <br/> 2.Sample: a notation of the enclosed space it was studied
@@ -120,7 +120,7 @@ H1: Larval weight does not influence adult behaviour.
 </br>
 
 ### OBJECTIVE OF WEIGHT DATA
--To analyse the response of larvae weights to different concentration of thiamethoxan 
+-To analyse the response of larvae weights to different concentration of thiamethoxam 
 -To check the effect of the treatment on the possiblity of the larvae to escape the experimental lagoon
 
 
@@ -152,7 +152,7 @@ Because the data is categorical, we use a fisher test. After a simple fisher tes
 
 The plot will also be ploted with Kaplan-Meier curves for a better visualisation.
 
-Same results are obtained with the redefined survival. We redefine survival as the larvae that survived pupation and their behaviour could be studied as adults. Unfrtunately, we couldn't correlate each individual from surival with the ones form behaviour.
+Same results are obtained with the redefined survival. We redefine survival as the larvae that survived pupation and their behaviour could be studied as adults. Unfortunately, we could not correlate each individual from surival with the ones form behaviour.
 
 ---
 
@@ -165,14 +165,15 @@ Initial and final weight were made into different data frames. This was needed t
 
 </br>
 
-### Metods for behaviour:
+### Methods for behaviour:
 
-we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.Other metods were too complex to be explained here, detailed with plots in results.
+we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.Other methods were too complex to be explained here, detailed with plots in results.
 
 ## 6. Results. Figures and tables with captions and description of what do they mean.
 </br>
 
 #### a1. Effect of treatments on survival (multi-comp Fisher Test): 
+
 ##### treatment500 has significant differences with all of them, between the others there is no significant difference
 
 ```{r effect of treatments on survival, fig.cap = "Figure a1: Plot to see the differences between blocks and treatments of the survival of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", echo=TRUE}
@@ -208,14 +209,14 @@ t1 <- table(survival$treatment, survival$dead)
 #fisher.test(t1, simulate.p.value=TRUE)
 
 #A simple fisher test tells us that there are significant differences between treatments.
-#We proceed with a multi-comparation fisher test.
+#We proceed with a multi-comparison fisher test.
 ```
 
-#### Multi-comparation fisher test, each treatment compared with the control
+#### Multi-comparison fisher test, each treatment compared with the control
 
 ```{r 2-effect of treatments on survival, echo=TRUE}
 f1 <- fisher.multcomp(t1)
-knitr::kable(f1$p.value[,1], align = 'ccccc', format='simple', caption = "Table that shows pvalue for the mumti-fisher test, each treatment being comaperd with control")
+knitr::kable(f1$p.value[,1], align = 'ccccc', format='simple', caption = "Table that shows pvalue for the mult-fisher test, each treatment being comaperd with control")
 
 ```
 
@@ -224,7 +225,7 @@ knitr::kable(f1$p.value[,1], align = 'ccccc', format='simple', caption = "Table 
 Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05) 
 </br> </br>
 
-#### a2. Effect of treatments on  REDEFINED survival (multi-comp Fisher Test): treatment500 has significant differences with all of them, between the others there is no significant difference
+#### a2. Effect of treatments on  REDEFINED survival (multcomp Fisher Test): Treatment500 has significant differences with all of them, between the others there is no significant difference
 
 ```{r effect of treatments on REDEFINED survival,fig.cap = "Figure a2.1: The differences between blocks and treatments on REDEFINED survival for Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
 #Redefine survival and redo the analyses
@@ -294,14 +295,14 @@ t1 <- table(survival$treatment, survival$redefdead)
 #fisher.test(t1, simulate.p.value=TRUE)
 
 #A simple fisher test tells us that there are significant differences between treatments.
-#We proceed with a multi-comparation fisher test.
+#We proceed with a multi-comparison fisher test.
 ```
 
 #### Multi-comparation fisher test, each treatment compared with the control
 
 ```{r 2-effect of treatments on REDEFINED survival, error=FALSE, echo=TRUE}
 f1 <- fisher.multcomp(t1)
-knitr::kable(f1$p.value[,1],cap = "This table shows the multi-comparation fisher test, each treatment compared with the control for REDEFINES survival")
+knitr::kable(f1$p.value[,1],cap = "This table shows the multi-comparison fisher test, each treatment compared with the control for REDEFINED survival")
 
 
 ```
@@ -309,7 +310,7 @@ knitr::kable(f1$p.value[,1],cap = "This table shows the multi-comparation fisher
 Treatment 500 has significant differences with the control, others show no significant difference (p value smaller than 0.05)
 </br> </br>
 
-#### a3. A plot that puts survival and pupate in perspective (Kaplan-Meier curves)
+#### a3. A plot that puts survival and pupating in perspective (Kaplan-Meier curves)
 
 ```{r Kaplan-Meier curves, fig.cap = "Figure a3.1.  Cumulative survival of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control." , error=FALSE, echo=TRUE}
 
@@ -333,7 +334,8 @@ ggsurvplot(fit1, data = survival, pval = TRUE)
 
 </br>
 
-#### a4. Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
+#### a4. Effect of treatments on time to pupate (ANOVA): Treatment 500 is the only one that shows significant differences 
+#PLOT
 
 </br>
 
@@ -347,7 +349,7 @@ fit2 <- survfit(surv_object ~ treatment, data = survival)
 #summary(fit2)
 ggsurvplot(fit2, data = survival, main = "survival for pupate", pval = TRUE)
 
-#As many insects die while on treatment 500, the plot for time to pupate isn't very conclusive.
+#As many insects die while on treatment 500, the plot for time to pupate is not very conclusive.
 
 #ANOVA
 
@@ -374,7 +376,8 @@ anv <- aov( lm(survival$timetopup ~ survival$treatment) )
 ```
 </br>
 
-#### a5. Effect of treatments on survival (ANOVA): Treatment 500 is the only one that shows significant differences #PLOT
+#### a5. Effect of treatments on survival (ANOVA): Treatment 500 is the only one that shows significant differences
+#PLOT
 
 ```{r HSD Test for survival, fig.cap="Figure a5. HSD test that studies the effect of treatment on survival for of Eristalis tenax larvae when reared in substrate contaminated with five different concentrations of thiamethoxam, plus control.", error=FALSE, echo=TRUE}
 
@@ -383,7 +386,7 @@ anv <- aov( lm(survival$timetopup ~ survival$treatment) )
 agri <- HSD.test(anv, 'survival$treatment', alpha = 0.05, group=TRUE, main = "HSD Test")
 plot(agri, main = "Effect of treatment on survival", ylab = "Insects counted", xlab = "Type of spray", sub = "two groups of effects: a and b")
 
-#Conclusions:
+#Conclusion:
 #Treatment 500 is the only one that shows significant differences in comparison with the control.
 
 
@@ -436,12 +439,12 @@ var <- get_pca_var(pca1)
 
 autoplot(var$cor, main = "Heat map")
 ```
-From the heat map we can visualize that the first two dimensions explain a largest degree of variance in our data. The third and fourth component also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
+From the heat map we can visualize that the first two dimensions explain the largest degree of variance in our data. The third and fourth component also explain a large degree of the variance. The fourth dimension is a good fit for the probing behaviour (PR). 
 
 </br>
 
 ##### Correlation circle
-```{r, fig.cap = "Figure b2.3: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrow which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. Key : S - stationary, GR - grooming, W - walking, F - flying, PR - probing, N - feeding(nutrition), M - moving", error=FALSE,warning=FALSE}
+```{r, fig.cap = "Figure b2.3: This plot of the correlation circle visualizes the correlation between the first two principal components which explain the highest variance which are respectively 27.6 % and 18.8%. We can conclude that Flying and walking are correlated together (the arrow are grouped), stationary and  grooming are correlated together and the arrows which reprents feeding on nectar, pollen, and water is in the opposite direction and not correlated with others behaviours. Key : S - stationary, GR - grooming, W - walking, F - flying, PR - probing, N - feeding(nutrition), M - moving", error=FALSE,warning=FALSE}
 fviz_pca_var(pca1, col.var = "black")
 ```
 
@@ -455,7 +458,7 @@ autoplot(pca1, data = b2, colour = 'treatment', frame = TRUE, frame.type = 'norm
 
 </br>
 
-#### b3. Shapiro Wilk, and Kruskal Wallis to study the effect of treatment on behaviour
+#### b3. Shapiro Wilk and Kruskal Wallis to study the effect of treatment on behaviour
 
 ```{r}
 beh.aovS <- aov(S ~ treatment, data = b2)
@@ -533,7 +536,7 @@ knitr::kable(krusM$groups, align='ccccccc', format = "simple", caption =  "Krusk
 
 
 
-###### From the Kruskal Waliis test we can see that
+###### From the Kruskal Wallis test we can see that
 ###### 1. For Walking, Flying, Probing behaviours treatment did not have any effect on the amount of time spent by the adult hoverfly practicing each behaviour.
 ###### In the rest of the behaviours, the time  spent in each behaviour was different but there is no pattern in their classification. For example, in Moving behaviour, the control adults and the adults exposed to 500 ppb of thiamethoxam are grouped together.
 
@@ -744,46 +747,48 @@ knitr::kable(ff2$p.value[1,], caption = "Table that shows pvalue for the fisher-
 
 </br>
 
-## 7. Discussion. From your objectives.
+## 7. Discussion
 Our analysis results are in agreement with the author's.
 
-The redefine of survival has lead to the same results as the initial survival.
+The redefinition of survival led to the same results as the initial survival.
 
 We consider that the Kaplan-Meier curves would be better represented if the survival and time to pupate would be separated in the graphical representation.
 
-All in all, the objective of reproducing the study was reached succesfully and the extra tests and analysis we've done reached the same conclusion.
+To summarize, we reproduced the study successfully, did additional tests, and got the same results.
+
 
 </br>
 
-## 8. Conclusions.
-Place for improvement for the authors: 
--impossible to track individuals between data sets (inconsistent labelling with no legends)
--more analysis could be done by the original authors: redefine survival, Principal Component Analysis for behaviour)
--the data sets notation is not clearly explained(a lot of time was spend to understand what FIL means, we are almost sure that it means Found In Leaves)
--they never responded to our questions about the study on the peerj platform
+## 8. Conclusion
 
-However, we strongly appreciate the author's work:
--the theme is very relevant, supporting sustainability and biodiversity (looking at a minor pollinator)
--simple and easily understandable made it an ideal for studying
+**Place for improvement for the authors: **
+</br> -impossible to track individuals between data sets (inconsistent labeling with no legends)
+</br> -more analysis could be done by the original authors: redefine survival, Principal Component Analysis for behaviour)
+</br> -the data sets notation is not clearly explained(a lot of time was spent to understand what FIL means, we are almost sure that it means Found In Leaves)
+</br> -they never responded to our questions about the study on the peerj platform
 
-We also appreciate the complex experimental design: 
--they found a place with no history of insecticide use 
--including eggs were collected from different females to account for genetic variation with respect to thiamethoxam tolerance (in different experience round)
--elaborate measures to simulate natural environment
+**However, we strongly appreciate the author's work:**
+</br> -the theme is very relevant, supporting sustainability and biodiversity (looking at a minor pollinator)
+</br> -simple and easily understandable made it an ideal for studying
 
-We have advanced a lot
--github in a team and how to correct it's errors
--teamwork in general
--countless new R and statistical practical and theoretical knowledge: Kaplan-Meier curves, how to transform the data, how to study and analyze categorical data
+**We also appreciate the complex experimental design: **
+</br> -they found a place with no history of insecticide use 
+</br> -including eggs were collected from different females to account for genetic variation with respect to thiamethoxam tolerance (in different experience round)
+</br> -elaborate measures to simulate natural environment
+
+**We have advanced a lot**
+</br> -github in a team and how to correct its' errors
+</br> -teamwork in general
+</br> -countless new R and statistical practical and theoretical knowledge: Kaplan-Meier curves, how to transform the data, how to study and analyze categorical data
 PCA: elipses, Heatmap , Correlation circle
 
-We practically used what we learned in the class: ANOVA, Shapiro, Kruskal-Walis,ggplot function, Fisher Test and stat compare mean
+</br> We practically used what we learned in the class: ANOVA, Shapiro, Kruskal-Wallis,ggplot function, Fisher Test and stat compare mean
 
-We still have a lot to learn:
--syntax to be learned
--a lot of statistical tests, tools and graphical representations to be "discovered" by each one
--how to come up with ideas for our own research
--how to organize our own research and the collected data
--how to deal with larger data sets (for this project it was small)
--because of the poor quality of the data notations between the different data sets(survival, weight, behaviour) we could not do additional analysis like mediation and moderation and that is something we would have liked to practice
--how to make more visually pleasing Rmarkdown documents
+**We still have a lot to learn:**
+</br> -syntax to be learned
+</br> -a lot of statistical tests, tools and graphical representations to be discovered by each one
+</br>- how to come up with ideas for our own research
+</br>- how to organize our own research and the collected data
+</br>- how to deal with larger data sets (for this project it was small)
+</br>- because of the poor quality of the data notations between the different data sets(survival, weight, behaviour) we could not do additional analysis like mediation and moderation and that is something we would have liked to practice
+</br> -how to make more visually pleasing Rmarkdown documents
