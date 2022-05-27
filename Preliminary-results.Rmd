@@ -2,8 +2,7 @@
 title: "1. Title:Final-results"
 author: "2. Team members names: Maya Hachicha, Gabriel Olawuyi, Madhav Chandarana, Radulescu Serban"
 date: "15/12/2020"
-output: 
-  html_document:
+output: rmarkdown::github_document
     code_folding: hide
 ---
 
