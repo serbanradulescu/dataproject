@@ -1,6 +1,6 @@
 ---
-title: "1. Title:Final-results"
-author: "2. Team members names: Maya Hachicha, Gabriel Olawuyi, Madhav Chandarana, Radulescu Serban"
+title: " Title: Replicating the results of a research"
+author: "Team: Maya Hachicha, Gabriel Olawuyi, Madhav Chandarana, Serban Radulescu"
 date: "15/12/2020"
 output: 
   html_document:
@@ -34,7 +34,8 @@ library(car)
 
 
 
-## 3. Introduction. Explain the origin and structure of your data.
+##  Introduction. Explain the origin and structure of your data.
+
 Data comes from: https://peerj.com/articles/4258/, which is Effects of chronic exposure to thiamethoxam on larvae of the hoverfly Eristalis tenax (Diptera, Syrphidae).
 
 The aquatic larvae of hoverfly were raised in lagoons with different concentrations of thiamethoxam. The paper studied the impact of the pesticide on larval development(weight gain), survival(whether the larva forms a pupa or not) , and seven adult behaviours.
@@ -91,11 +92,14 @@ The behaviours studied are:
 <br/> 5.weight - in grams
 
 ---
-## 4. Objectives and hypotheses.
+
+###  Objectives and hypotheses.
 
 In this project, the objectives will be to reproduce the analysis done by the team that conducted the study. Further analysis can be conducted, at the recommendation of the coordinating professor.
 
-### OBJECTIVE TREATMENT ON SURVIVAL
+</br>
+
+#### OBJECTIVES: TREATMENT ON SURVIVAL
 Hypothesis 1:
 H0: Treatments do not affect survival
 H1: Treatments affect survival
@@ -106,7 +110,7 @@ H1': Treatments affect survival
 
 </br>
 
-### OBJECTIVE OF BEHAVIOUR STUDY
+#### OBJECTIVES: BEHAVIOUR STUDY
 To study if the exposure to different concentrations of thiamethoxam during the larval stage affects the behaviour of hoverflies as adults.
 
 Hypothesis 1:
@@ -119,7 +123,7 @@ H1: Larval weight does not influence adult behaviour.
 
 </br>
 
-### OBJECTIVE OF WEIGHT DATA
+#### OBJECTIVE OF WEIGHT DATA
 -To analyse the response of larvae weights to different concentration of thiamethoxam 
 -To check the effect of the treatment on the possiblity of the larvae to escape the experimental lagoon
 
@@ -133,7 +137,7 @@ H1: Treatment has no effect on escaping the lagoon
 
 </br>
 
-## 5. Methods. What have you done? And what did you use to do it? Step by step, so anyone could do it again by reading this part.
+## Methods. What have you done? And what did you use to do it? Step by step, so anyone could do it again by reading this part.
 
 ---
 
@@ -169,7 +173,7 @@ Initial and final weight were made into different data frames. This was needed t
 
 we sourced our data from the PeerJ article mentioned above. We did Principal Component Analysis to study the impact of thiamethoxam on adult behaviour.Other methods were too complex to be explained here, detailed with plots in results.
 
-## 6. Results. Figures and tables with captions and description of what do they mean.
+## Results. Figures and tables with captions and description of what do they mean.
 </br>
 
 #### a1. Effect of treatments on survival (multi-comp Fisher Test): 
@@ -747,7 +751,7 @@ knitr::kable(ff2$p.value[1,], caption = "Table that shows pvalue for the fisher-
 
 </br>
 
-## 7. Discussion
+## Discussion
 Our analysis results are in agreement with the author's.
 
 The redefinition of survival led to the same results as the initial survival.
@@ -759,7 +763,7 @@ To summarize, we reproduced the study successfully, did additional tests, and go
 
 </br>
 
-## 8. Conclusion
+## Conclusion
 
 **Place for improvement for the authors: **
 </br> -impossible to track individuals between data sets (inconsistent labeling with no legends)
